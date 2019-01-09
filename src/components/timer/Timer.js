@@ -9,7 +9,7 @@ export default class Timer extends Component {
 
     this.state = {
       timingEvents: [],
-      nonce: 0,
+      nonce: 0, // juste la pour forcé le rendu par modification d'un state
       startCount: false,
     };
 
@@ -18,17 +18,19 @@ export default class Timer extends Component {
     // this.addTimerEvent = this.addTimerEvent.bind(this);
   }
   startInterval = () => {
-    // console.log('fct setInterval', this.state);
+    // si setInterva exit et n'es pas nul on le kill
     if (this.timeInterval != null) {
-      // console.log('clear setInterval');
       clearInterval(this.timeInterval);
     }
+    // le state startCount es passer a true/false par addTimeEvent
+    // si true on demarre le setInterval
     if (this.state.startCount) {
-      // console.log('start setInterval');
       this.timeInterval = setInterval(this.tick, 1000);
     }
   };
 
+  // tick es lancer avec un setInterval (startInterval) et va 'forcé' le rendu
+  // en updatant la valeur du state nonce
   tick = () => {
     this.setState(prevState => ({ nonce: prevState.nonce + 1 }));
   };
@@ -37,9 +39,8 @@ export default class Timer extends Component {
     this.startInterval();
   }
 
-  // functions ----------
   addTimerEvent = () => {
-    // console.log('fct addTimer >>>');
+    // on recup la valeur inversse du state startCount
     let stCount = !this.state.startCount;
     this.setState(
       {
@@ -47,7 +48,7 @@ export default class Timer extends Component {
         startCount: stCount,
       },
       () => {
-        // setState es une fonction async donc callback
+        // setState es une fonction async donc startInterval es lancer en callback
         this.startInterval();
       }
     );
