@@ -1,0 +1,26 @@
+@import 'variables';
+
+.btn-timer {
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+
+  &:focus {
+    outline: 0;
+  }
+
+  &.start::after {
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    content: '\f04b';
+    color: $light-orange;
+  }
+  &.stop::after {
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    content: '\f04d';
+    color: $dark-orange;
+  }
+}

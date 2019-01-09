@@ -1,0 +1,43 @@
+@import 'variables';
+
+.task {
+  display: block;
+  width: 100%;
+
+  &-header {
+    display: flex;
+    align-items: center;
+    border: 1px solid $dark-blue;
+    background: #222;
+    padding: 0 10px;
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      margin: 0;
+      padding: 0;
+    }
+
+    .pushRigth {
+      margin-left: auto;
+    }
+  }
+
+  &-collapse {
+    height: 0px;
+    overflow: hidden;
+    opacity: 0;
+    background: #555;
+  }
+
+  &:hover > &-collapse {
+    display: flex;
+    padding: 0 10px;
+    height: auto;
+    opacity: 100;
+    transition: opacity 500ms ease-in-out;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
