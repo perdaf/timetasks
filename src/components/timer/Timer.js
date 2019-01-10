@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import TimeDisplay from './TimeDisplay';
 import ButtonTimer from './ButtonTimer';
-import '../../scss/timer.scss';
+import './timer.scss';
 
 export default class Timer extends Component {
   constructor(props) {

@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../scss/BouttonTimer.scss';
+import './BouttonTimer.scss';
 
 export default function ButtonTimer(props) {
   const label = props.timingEvents.length % 2 === 0 ? 'start' : 'stop';

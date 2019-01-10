@@ -1,4 +1,4 @@
-@import 'variables';
+@import '../scss/variables';
 
 .App {
   background-color: $body-bg;
@@ -13,4 +13,10 @@
 .taskContainer {
   display: block;
   width: 100%;
+}
+
+#addForm {
+  label {
+    width: 100%;
+  }
 }

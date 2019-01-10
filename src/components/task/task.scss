@@ -1,8 +1,12 @@
-@import 'variables';
+@import '../../scss/variables';
 
 .task {
   display: block;
   width: 100%;
+
+  .pushRigth {
+    margin-left: auto;
+  }
 
   &-header {
     display: flex;
@@ -17,10 +21,6 @@
     h4 {
       margin: 0;
       padding: 0;
-    }
-
-    .pushRigth {
-      margin-left: auto;
     }
   }
 

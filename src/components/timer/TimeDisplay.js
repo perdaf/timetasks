@@ -2,7 +2,6 @@ import React from 'react';
 import formatDuration from 'format-duration';
 
 function calcTime(events) {
-  console.log('calctime fct >>>');
   let elapsed = 0;
   for (let i = 0; i < events.length; i += 2) {
     const start = events[i];

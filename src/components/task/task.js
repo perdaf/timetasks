@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Timer from '../timer/Timer';
-import '../../scss/task.scss';
+import './task.scss';
 
 export default class Task extends Component {
   render() {
@@ -14,7 +14,19 @@ export default class Task extends Component {
         </div>
         <div className="task-collapse">
           <p className="task-desc">{this.props.taskDesc}</p>
-          <p className="task-timeElasped">{this.props.taskElapsTime}</p>
+          {/* <p className="task-timeElasped">{this.props.taskElapsTime}</p> */}
+          <button
+            className="btn btn-secondary pushRigth"
+            onClick={() => this.props.btnEditHandler(this.props.taskId)}
+          >
+            edit
+          </button>
+          <button
+            className="btn btn-danger"
+            onClick={() => this.props.btnDeleteHandler(this.props.taskId)}
+          >
+            delete
+          </button>
         </div>
       </div>
     );
