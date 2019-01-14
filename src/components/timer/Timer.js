@@ -58,7 +58,10 @@ export default class Timer extends Component {
     return (
       <div className="timer">
         <div className="timer-display">
-          <TimeDisplay timingEvents={this.state.timingEvents} />
+          <TimeDisplay
+            timingEvents={this.state.timingEvents}
+            elapsTime={this.props.taskElapsTime}
+          />
         </div>
         <div className="timer-button">
           <ButtonTimer

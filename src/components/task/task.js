@@ -9,12 +9,11 @@ export default class Task extends Component {
         <div className="task-header">
           <h4>{this.props.taskName}</h4>
           <div className="pushRigth">
-            <Timer />
+            <Timer taskElapsTime={this.props.taskElapsTime} />
           </div>
         </div>
         <div className="task-collapse">
           <p className="task-desc">{this.props.taskDesc}</p>
-          {/* <p className="task-timeElasped">{this.props.taskElapsTime}</p> */}
           <button
             className="btn btn-secondary pushRigth"
             onClick={() => this.props.btnEditHandler(this.props.taskId)}
