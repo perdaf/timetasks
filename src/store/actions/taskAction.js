@@ -23,14 +23,41 @@ export const createTask = task => {
 };
 
 export const deleteTask = id => {
-  return (dispatch, getState) => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
     // async call to db
-    dispatch({ type: 'DELETETASK', id });
+    const firestore = getFirestore();
+    firestore
+      .collection('Tasks')
+      .doc(id)
+      .delete()
+      .then(() => {
+        dispatch({ type: 'DELETETASK', id });
+      })
+      .catch(err => {
+        console.error(err);
+      });
   };
 };
-export const editTask = (id, args) => {
-  return (dispatch, getState) => {
+export const editTask = (id, task) => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
     // async call to db
-    dispatch({ type: 'EDITTASK', id, args });
+    let newtask = {
+      name: task[0][0].value,
+      desc: task[0][1].value,
+    };
+    // console.log('newTask >>>', { newtask });
+    const firestore = getFirestore();
+    firestore
+      .collection('Tasks')
+      .doc(id)
+      .set({
+        ...newtask,
+      })
+      .then(() => {
+        dispatch({ type: 'EDITTASK', id, task });
+      })
+      .catch(err => {
+        console.error(err);
+      });
   };
 };

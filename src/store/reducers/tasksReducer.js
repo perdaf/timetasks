@@ -27,28 +27,32 @@ const tasksReducer = (state = initialStates, action) => {
       console.log('task added to db');
       return state;
     case 'DELETETASK':
-      let tasksIndex = state.tasks.findIndex(task => {
-        return task.id === action.id;
-      });
-      let newtasks = state.tasks.slice();
-      newtasks.splice(tasksIndex, 1);
-      return {
-        ...state,
-        tasks: newtasks,
-      };
+      console.log('task deleted >>> ', action.id);
+      //   let tasksIndex = state.tasks.findIndex(task => {
+      //     return task.id === action.id;
+      //   });
+      //   let newtasks = state.tasks.slice();
+      //   newtasks.splice(tasksIndex, 1);
+      //   return {
+      //     ...state,
+      //     tasks: newtasks,
+      //   };
+      return state;
     case 'EDITTASK':
-      tasksIndex = state.tasks.findIndex(task => {
-        return task.id === action.id;
-      });
-      let newTasks = state.tasks.slice();
-      newTasks[tasksIndex] = {
-        ...newTasks[tasksIndex],
-        name: action.args[0][0].value,
-        desc: action.args[0][1].value,
-      };
-      return {
-        tasks: newTasks,
-      };
+      console.log('Task updated >>>', action.id);
+      //   let tasksIndex = state.tasks.findIndex(task => {
+      //     return task.id === action.id;
+      //   });
+      //   let newTasks = state.tasks.slice();
+      //   newTasks[tasksIndex] = {
+      //     ...newTasks[tasksIndex],
+      //     name: action.args[0][0].value,
+      //     desc: action.args[0][1].value,
+      //   };
+      //   return {
+      //     tasks: newTasks,
+      //   };
+      return state;
     default:
       return state;
   }
