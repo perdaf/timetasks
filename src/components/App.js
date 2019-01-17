@@ -7,6 +7,8 @@ import Task from './task/task';
 import Modal from './modal/Modal';
 import { connect } from 'react-redux';
 import { createTask, deleteTask, editTask } from '../store/actions/taskAction';
+import { firestoreConnect } from 'react-redux-firebase';
+import { compose } from 'redux';
 
 class App extends Component {
   // addTask = args => {
@@ -30,18 +32,12 @@ class App extends Component {
     console.log([args]);
   };
 
-  // DeleteTask = index => {
-  //   let tasks = this.state.tasks.slice();
-  //   tasks.splice(index, 1);
-  //   this.setState({ tasks });
-  // };
-
-  toggleModalSuppTask = e => {
+  toggleModalSuppTask = id => {
     $('#ConfirmDelete').modal('show');
     $('.ModalBtnConfirm')
       .off('click')
       .click(() => {
-        this.props.onDeleteTask(e);
+        this.props.onDeleteTask(id);
         $('#ConfirmDelete').modal('hide');
       });
   };
@@ -163,7 +159,9 @@ class App extends Component {
 }
 
 const mapStateToProps = state => {
-  return { tasks: state.tasks };
+  console.log(state);
+  return { tasks: state.firestore.ordered.Tasks || [] };
+  // return { tasks: state.tasks.tasks };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -176,7 +174,10 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+export default compose(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  ),
+  firestoreConnect([{ collection: 'Tasks' }])
 )(App);
