@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom';
 import './scss/index.scss';
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
+
+import 'bootstrap';
+
 // redux ------------------------------------------
 import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';

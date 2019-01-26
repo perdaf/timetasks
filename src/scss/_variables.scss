@@ -4,8 +4,6 @@ $light-blue: #00c7ff;
 $dark-orange: #b33414;
 $light-orange: #ff8240;
 
-// $bg-color: $dark-gray;
-
 // colors
 $white: #fff;
 $gray-100: #f8f9fa;
@@ -68,7 +66,8 @@ $colors: map-merge(
   $colors
 );
 
-$primary: $blue;
+// $primary: $blue;
+$primary: $dark-orange;
 $secondary: $gray-600;
 $success: $green;
 $info: $cyan;

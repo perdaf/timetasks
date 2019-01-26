@@ -1,28 +1,60 @@
-import React from 'react';
+import React, { Component } from 'react';
 import formatDuration from 'format-duration';
 
-function calcTime(events, elapsTime) {
-  // recup du elapsed time de la task et convert en ms ----
-  // -------
-  let tt = elapsTime.split(':');
-  let ms = (tt[0] * 3600 + tt[1] * 60 + tt[2] * 1) * 1000;
-  let elapsed = ms || 0;
-  // -------------------------------------------------------
-  for (let i = 0; i < events.length; i += 2) {
-    const start = events[i];
-    const stop = events[i + 1] || new Date();
+class TimeDisplay extends Component {
+  constructor(props) {
+    super(props);
 
-    elapsed += stop - start;
+    this.state = {
+      // timingEvents: this.props.timingEvents,
+      taskElaps: this.props.timeElaps,
+    };
   }
-  return elapsed;
+
+  componentDidMount() {
+    this.setState({
+      taskElaps: this.props.timeElaps || 0,
+    });
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      JSON.stringify(this.props.timeElaps) !==
+      JSON.stringify(prevProps.timeElaps)
+    ) {
+      this.updateStateTimerDisplay();
+    }
+  }
+
+  updateStateTimerDisplay() {
+    this.setState({ taskElaps: this.props.timeElaps }, () => {
+      console.log('timerdisplay create >>>', this.state.taskElaps);
+    });
+  }
+
+  // calcTime = (events, elapsed) => {
+  //   // console.log('events >>> ', events);
+  //   // console.log('elapsed >>> ', elapsed);
+
+  //   for (let i = 0; i < events.length; i += 2) {
+  //     const start = events[i];
+  //     const stop = events[i + 1] || new Date();
+
+  //     elapsed += stop - start;
+  //   }
+
+  //   return elapsed;
+  // };
+  render() {
+    // console.log('%c props >>> ', 'background:#222; color: #bada55');
+    // console.log(this.props);
+
+    return (
+      <div>
+        <span>{formatDuration(this.state.taskElaps)}</span>
+      </div>
+    );
+  }
 }
 
-export default function TimeDisplay(props) {
-  return (
-    <div>
-      <span>
-        {formatDuration(calcTime(props.timingEvents, props.elapsTime))}
-      </span>
-    </div>
-  );
-}
+export default TimeDisplay;

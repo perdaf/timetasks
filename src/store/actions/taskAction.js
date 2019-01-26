@@ -1,17 +1,10 @@
 export const createTask = task => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
-    // async call to db
-    let newtask = {
-      name: task[0][0].value,
-      desc: task[0][1].value,
-      elapsTime: '00:00:00',
-    };
-    // console.log('newTask >>>', { newtask });
     const firestore = getFirestore();
     firestore
       .collection('Tasks')
       .add({
-        ...newtask,
+        ...task,
       })
       .then(() => {
         dispatch({ type: 'ADDTASK', task });
@@ -41,20 +34,40 @@ export const deleteTask = id => {
 export const editTask = (id, task) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     // async call to db
-    let newtask = {
-      name: task[0][0].value,
-      desc: task[0][1].value,
-    };
-    // console.log('newTask >>>', { newtask });
     const firestore = getFirestore();
     firestore
       .collection('Tasks')
       .doc(id)
-      .set({
-        ...newtask,
-      })
+      .set(
+        {
+          name: task.name,
+          desc: task.desc,
+        },
+        { merge: true }
+      )
       .then(() => {
         dispatch({ type: 'EDITTASK', id, task });
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  };
+};
+
+export const editElapsTimeTask = (elapsTime, id) => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    const firestore = getFirestore();
+    firestore
+      .collection('Tasks')
+      .doc(id)
+      .set(
+        {
+          elapsTime: elapsTime,
+        },
+        { merge: true }
+      )
+      .then(() => {
+        dispatch({ type: 'EDITELAPSTIME', elapsTime });
       })
       .catch(err => {
         console.error(err);
