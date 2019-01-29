@@ -14,7 +14,7 @@ class Timer extends Component {
 
     this.state = {
       timingEvents: [],
-      nonce: 0, // juste la pour forcé le rendu par modification d'un state
+      // nonce: 0, // juste la pour forcé le rendu par modification d'un state
       startCount: false,
       timerDisplay: 0,
     };
@@ -24,24 +24,9 @@ class Timer extends Component {
     // this.addTimerEvent = this.addTimerEvent.bind(this);
   }
 
-  componentDidUpdate(prevProps) {
-    if (
-      JSON.stringify(this.props.taskElapsTime) !==
-      JSON.stringify(prevProps.taskElapsTime)
-    ) {
-      this.updateStateTimerDisplay();
-    }
-  }
-
-  updateStateTimerDisplay() {
-    this.setState({ timerDisplay: this.props.taskElapsTime }, () => {
-      console.log('timer create >>>', this.state.timerDisplay);
-    });
-  }
-
   componentDidMount() {
-    console.log('timer create >>>', this.state.timerDisplay);
     this.setState({ timerDisplay: this.props.taskElapsTime }, () => {
+      console.log('props >>> ', this.props);
       console.log('timer create >>>', this.state.timerDisplay);
     });
   }
@@ -62,8 +47,8 @@ class Timer extends Component {
   // en updatant la valeur du state nonce
   tick = () => {
     this.setState(prevState => ({
-      nonce: prevState.nonce + 1,
-      timerDisplay: prevState.timerDisplay + 1,
+      // nonce: prevState.nonce + 1,
+      timerDisplay: prevState.timerDisplay + 1000,
     }));
   };
 
@@ -100,7 +85,7 @@ class Timer extends Component {
       <div className="d-flex align-items-center">
         <div className="timer-display">
           <TimeDisplay timeElaps={this.state.timerDisplay} />
-          {this.state.timerDisplay}
+          {/* {this.state.timerDisplay} */}
         </div>
         <div className="timer-button">
           <ButtonTimer
@@ -113,15 +98,6 @@ class Timer extends Component {
   }
 }
 
-// const mapStateToProps = (state, ownProps) => {
-//   const id = ownProps.taskId;
-//   const tasks = state.firestore.data.Tasks;
-//   const task = tasks ? tasks[id] : null;
-
-//   return {
-//     task: task,
-//   };
-// };
 const mapDispatchToProps = dispatch => {
   return {
     EditTimeTask: (elapstime, id) => dispatch(editElapsTimeTask(elapstime, id)),

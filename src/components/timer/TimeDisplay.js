@@ -6,52 +6,29 @@ class TimeDisplay extends Component {
     super(props);
 
     this.state = {
-      // timingEvents: this.props.timingEvents,
-      taskElaps: this.props.timeElaps,
+      affTime: 0,
+      time: 0,
     };
   }
 
-  componentDidMount() {
-    this.setState({
-      taskElaps: this.props.timeElaps || 0,
-    });
-  }
-
   componentDidUpdate(prevProps) {
-    if (
-      JSON.stringify(this.props.timeElaps) !==
-      JSON.stringify(prevProps.timeElaps)
-    ) {
-      this.updateStateTimerDisplay();
+    if (this.props.timeElaps !== prevProps.timeElaps) {
+      // console.log('PROPS NON IDENTIQUE >>>', this.props.timeElaps);
+      let time = formatDuration(this.props.timeElaps);
+      this.setState({
+        affTime: this.props.timeElaps,
+        time,
+      });
+      // console.log('update >>>', this.state.time);
     }
   }
 
-  updateStateTimerDisplay() {
-    this.setState({ taskElaps: this.props.timeElaps }, () => {
-      console.log('timerdisplay create >>>', this.state.taskElaps);
-    });
-  }
-
-  // calcTime = (events, elapsed) => {
-  //   // console.log('events >>> ', events);
-  //   // console.log('elapsed >>> ', elapsed);
-
-  //   for (let i = 0; i < events.length; i += 2) {
-  //     const start = events[i];
-  //     const stop = events[i + 1] || new Date();
-
-  //     elapsed += stop - start;
-  //   }
-
-  //   return elapsed;
-  // };
   render() {
-    // console.log('%c props >>> ', 'background:#222; color: #bada55');
-    // console.log(this.props);
+    // console.log('TimerDisplay time >>>', this.state.time);
 
     return (
       <div>
-        <span>{formatDuration(this.state.taskElaps)}</span>
+        <span>{this.state.time}</span>
       </div>
     );
   }

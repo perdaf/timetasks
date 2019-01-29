@@ -1,13 +1,9 @@
 import React, { Component } from 'react';
 import Timer from '../timer/Timer';
 
-// import { compose } from 'redux';
-// import { connect } from 'react-redux';
-// import { firestoreConnect } from 'react-redux-firebase';
-
 class Task extends Component {
   state = {
-    showTaskDetail: false,
+    showTaskDetail: this.props.showTaskDetail,
   };
 
   onShowClick = () => {
@@ -16,13 +12,24 @@ class Task extends Component {
     });
   };
 
+  componentDidUpdate(prevProps) {
+    if (this.props.showTaskDetail !== prevProps.showTaskDetail) {
+      this.setState({
+        showTaskDetail: this.props.showTaskDetail,
+      });
+    }
+  }
+
   render() {
     const { taskId, taskElapsTime, taskDesc, taskName } = this.props;
-    const showTaskDetail = this.state.showTaskDetail;
+    const { showTaskDetail } = this.state;
 
     return (
       <div className="card mb-3">
-        <div className="card-header text-dark d-flex align-items-center">
+        <div
+          className="card-header text-dark d-flex align-items-center"
+          style={{ maxHeight: '45px' }}
+        >
           <div className="p-2">
             <h4>{taskName}</h4>
           </div>
@@ -56,20 +63,5 @@ class Task extends Component {
     );
   }
 }
-
-// const mapStateToProps = (state, ownProps) => {
-//   const id = ownProps.taskId;
-//   const tasks = state.firestore.data.Tasks;
-//   const task = tasks ? tasks[id] : null;
-
-//   return {
-//     task: task,
-//   };
-// };
-
-// export default compose(
-//   connect(mapStateToProps),
-//   firestoreConnect([{ collection: 'Tasks' }])
-// )(Task);
 
 export default Task;

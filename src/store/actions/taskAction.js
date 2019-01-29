@@ -42,6 +42,7 @@ export const editTask = (id, task) => {
         {
           name: task.name,
           desc: task.desc,
+          thj: task.thj,
         },
         { merge: true }
       )

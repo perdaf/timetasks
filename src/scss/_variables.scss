@@ -62,6 +62,7 @@ $colors: map-merge(
     'white': $white,
     'gray': $gray-600,
     'gray-dark': $gray-800,
+    'blue-dark': $dark-blue,
   ),
   $colors
 );
@@ -75,6 +76,7 @@ $warning: $yellow;
 $danger: $red;
 $light: $gray-100;
 $dark: $gray-800;
+$darkblue: $dark-blue;
 
 $theme-colors: ();
 // stylelint-disable-next-line scss/dollar-variable-default
@@ -88,6 +90,7 @@ $theme-colors: map-merge(
     'danger': $danger,
     'light': $light,
     'dark': $dark,
+    'darkblue': $darkblue,
   ),
   $theme-colors
 );
