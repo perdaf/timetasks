@@ -28,7 +28,9 @@ class TimeDisplay extends Component {
 
     return (
       <div>
-        <span>{this.state.time}</span>
+        <span className="display-4 font-weight-bold my-2">
+          {this.state.time}
+        </span>
       </div>
     );
   }

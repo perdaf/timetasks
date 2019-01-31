@@ -5,6 +5,7 @@ export const createTask = task => {
       .collection('Tasks')
       .add({
         ...task,
+        createdAt: new Date(),
       })
       .then(() => {
         dispatch({ type: 'ADDTASK', task });
@@ -61,12 +62,9 @@ export const editElapsTimeTask = (elapsTime, id) => {
     firestore
       .collection('Tasks')
       .doc(id)
-      .set(
-        {
-          elapsTime: elapsTime,
-        },
-        { merge: true }
-      )
+      .update({
+        elapsTime,
+      })
       .then(() => {
         dispatch({ type: 'EDITELAPSTIME', elapsTime });
       })

@@ -27,68 +27,13 @@ class Home extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    // Typical usage (don't forget to compare props):
     if (this.props.tasks !== prevProps.tasks) {
       this.setState({
         tasks: this.props.tasks,
       });
     }
-    // console.log('componentDidUpdate > state tasks >>>', this.state.tasks);
   }
 
-  // handleOnChange = e => {
-  //   e.preventDefault();
-  //   const { name, value } = e.target;
-  //   this.setState({
-  //     newTask: {
-  //       ...this.state.newTask,
-  //       [name]: value,
-  //     },
-  //   });
-  // };
-  //-------------------------------------------
-  // toggleModalSuppTask = id => {
-  //   $('#ConfirmDelete').modal('show');
-  //   $('.ModalBtnConfirm')
-  //     .off('click')
-  //     .click(() => {
-  //       this.props.onDeleteTask(id);
-  //       $('#ConfirmDelete').modal('hide');
-  //     });
-  //   this.forceUpdate();
-  // };
-
-  // //-----------------------------------
-  // toggleModalEditTask = id => {
-  //   // find task by id
-  //   const res = this.props.tasks.find(task => {
-  //     return task.id === id;
-  //   });
-  //   $('#taskName').val(res.name);
-  //   $('#taskDescription').val(res.desc);
-  //   // if i dont setstate and i dont change one off them => ''
-  //   this.setState({
-  //     newTask: {
-  //       ...this.state.newTask,
-  //       name: $('#taskName').val(),
-  //       desc: $('#taskDescription').val(),
-  //     },
-  //   });
-
-  //   $('#AddTask').modal('show');
-  //   $('.ModalBtnConfirm')
-  //     .off('click')
-  //     .click(() => {
-  //       this.props.onEditTask(id, this.state.newTask);
-  //       $('#addForm')[0].reset();
-  //       $('#AddTask').modal('hide');
-  //     });
-  //   $('.ModalBtnClose')
-  //     .off('click')
-  //     .click(() => {
-  //       $('#addForm')[0].reset();
-  //     });
-  // };
   render() {
     console.log('RENDER >>>');
 
@@ -116,17 +61,6 @@ class Home extends Component {
                   </div>
                 </div>
               </Link>
-
-              // <Task
-              //   key={index}
-              //   taskId={task.id}
-              //   taskName={task.name}
-              //   taskDesc={task.desc}
-              //   taskElapsTime={task.elapsTime}
-              //   showTaskDetail={false}
-              //   btnEditHandler={this.toggleModalEditTask}
-              //   btnDeleteHandler={this.toggleModalSuppTask}
-              // />
             );
           })}
         </React.Fragment>
@@ -134,10 +68,12 @@ class Home extends Component {
     }
     return (
       <div>
-        <h1 className="mb-3">Liste des taches</h1>
-        <div className="card">
+        <div className="card card text-dark mt-2">
+          <div className="card-header">
+            <h4 className="font-weight-bold">Liste des taches</h4>
+          </div>
           <div className="card-body">
-            <div className="row text-dark p-1">
+            <div className="row p-1">
               <div className="col-lg-8">
                 <h5 className="mb-1 font-weight-bold">Nom</h5>
               </div>
@@ -157,18 +93,10 @@ class Home extends Component {
 }
 
 const mapStateToProps = state => {
-  // console.log(state);
   return {
     tasks: state.firestore.ordered.Tasks || [],
   };
 };
-
-// const mapDispatchToProps = dispatch => {
-//   return {
-//     onDeleteTask: id => dispatch(deleteTask(id)),
-//     onEditTask: (id, args) => dispatch(editTask(id, args)),
-//   };
-// };
 
 export default compose(
   connect(

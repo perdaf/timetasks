@@ -14,21 +14,26 @@ class Timer extends Component {
 
     this.state = {
       timingEvents: [],
-      // nonce: 0, // juste la pour forcé le rendu par modification d'un state
       startCount: false,
       timerDisplay: 0,
+      baseTime: 0,
+      totalTimeElaps: 0,
     };
 
     this.timeInterval = null;
-    //bind function if you write old way function: addTimerEvent() {...}
-    // this.addTimerEvent = this.addTimerEvent.bind(this);
   }
 
   componentDidMount() {
-    this.setState({ timerDisplay: this.props.taskElapsTime }, () => {
-      console.log('props >>> ', this.props);
-      console.log('timer create >>>', this.state.timerDisplay);
+    this.setState({
+      timerDisplay: this.props.taskElapsTime,
+      baseTime: this.props.taskElapsTime,
     });
+  }
+
+  componentWillUnmount() {
+    console.log('total time elaps >>> ', this.state.totalTimeElaps);
+    const TimeToSave = (this.state.totalTimeElaps * 1000) + this.state.baseTime;
+    this.props.EditTimeTask(TimeToSave, this.props.taskId);
   }
 
   startInterval = () => {
@@ -44,17 +49,16 @@ class Timer extends Component {
   };
 
   // tick es lancer avec un setInterval (startInterval) et va 'forcé' le rendu
-  // en updatant la valeur du state nonce
   tick = () => {
     this.setState(prevState => ({
-      // nonce: prevState.nonce + 1,
       timerDisplay: prevState.timerDisplay + 1000,
+      totalTimeElaps: prevState.totalTimeElaps + 1
     }));
   };
 
   addTimerEvent = () => {
     // on recup la valeur inversse du state startCount
-    let stCount = !this.state.startCount;
+    const stCount = !this.state.startCount;
     this.setState(
       {
         timingEvents: [...this.state.timingEvents, new Date()],
@@ -67,16 +71,15 @@ class Timer extends Component {
     );
 
     if (!stCount) {
-      let elapsed_time = this.props.taskElapsTime || 0;
-      // -------------------------------------------------------
-      for (let i = 0; i < this.state.timingEvents.length; i += 2) {
-        const start = this.state.timingEvents[i];
-        const stop = this.state.timingEvents[i + 1] || new Date();
-
-        elapsed_time += stop - start;
-      }
-
-      this.props.EditTimeTask(elapsed_time, this.props.taskId);
+      // let elapsed_time = this.state.baseTime;
+      // // -------------------------------------------------------
+      // for (let i = 0; i < this.state.timingEvents.length; i += 2) {
+      //   const start = this.state.timingEvents[i];
+      //   const stop = this.state.timingEvents[i + 1] || new Date();
+      //   elapsed_time += stop - start;
+      // }
+      // this.setState({ totalTimeElaps: elapsed_time });
+      // this.props.EditTimeTask(elapsed_time, this.props.taskId);
     }
   };
 
@@ -85,7 +88,6 @@ class Timer extends Component {
       <div className="d-flex align-items-center">
         <div className="timer-display">
           <TimeDisplay timeElaps={this.state.timerDisplay} />
-          {/* {this.state.timerDisplay} */}
         </div>
         <div className="timer-button">
           <ButtonTimer

@@ -2,10 +2,12 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
 import formatDuration from 'format-duration';
+import moment from 'moment';
 
 import * as $ from 'jquery';
 
 import Modal from '../components/layout/modal/Modal';
+import Timer from '../components/timer/Timer';
 
 import { connect } from 'react-redux';
 import { deleteTask } from '../store/actions/taskAction';
@@ -34,7 +36,7 @@ class TaskDetail extends Component {
 
   render() {
     if (this.props.task) {
-      const { name, desc, thj, elapsTime } = this.props.task;
+      const { name, desc, thj, elapsTime, createdAt } = this.props.task;
       return (
         <div>
           <Modal
@@ -43,77 +45,89 @@ class TaskDetail extends Component {
             ModalContent="Voulez vous vraiment supprimer cette tache ?"
             ModalBtnLabel="Confime"
           />
-          <h2 className="mb-5 mt-4">Task detail</h2>
-
-          <div className="card text-dark">
-            <div className="card-header">
-              <h4 className="font-weight-bold text-center">Nom de la tache</h4>
-            </div>
-            <div className="card-body">
-              <h2>{name}</h2>
-            </div>
-          </div>
 
           <div className="card text-dark mt-2">
             <div className="card-header">
-              <h4 className="font-weight-bold text-center">
-                Description de la tache
-              </h4>
+              <h4 className="font-weight-bold text-center">Task Detail</h4>
             </div>
             <div className="card-body">
-              <h2>{desc}</h2>
-            </div>
-          </div>
+              <div className="row">
+                <div className="col-sm-6">
+                  <ul className="list-group list-group-flush">
+                    <li className="list-group-item">
+                      <div className="row">
+                        <div className="col-sm-3">
+                          <h5 className="font-weight-bold">Nom:</h5>
+                        </div>
+                        <div className="col-sm">
+                          <p>{name}</p>
+                        </div>
+                      </div>
+                    </li>
+                    <li className="list-group-item">
+                      <div className="row">
+                        <div className="col-sm-3">
+                          <h5 className="font-weight-bold">Desc:</h5>
+                        </div>
+                        <div className="col-sm">{desc}</div>
+                      </div>
+                    </li>
+                    <li className="list-group-item">
+                      <div className="row">
+                        <div className="col-sm-3">
+                          <h5 className="font-weight-bold">Créer le:</h5>
+                        </div>
+                        <div className="col-sm">
+                          {(createdAt &&
+                            moment(createdAt.toDate()).format('L')) ||
+                            '--'}
+                        </div>
+                      </div>
+                    </li>
+                    <li className="list-group-item">
+                      <div className="row">
+                        <div className="col-sm-3">
+                          <h5 className="font-weight-bold">THJ:</h5>
+                        </div>
+                        <div className="col-sm">{thj} &euro;</div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                <div className="col-sm-6 text-center d-flex flex-column justify-content-between align-items-center">
+                  <div>
+                    <h4 className="font-weight-bold">
+                      Temp passé sur la tache : {formatDuration(elapsTime)}
+                    </h4>
+                  </div>
+                  <div>
+                    <Timer taskId={this.state.id} taskElapsTime={elapsTime} />
+                  </div>
+                  <div>
+                    <h4 className="font-weight-bold">
+                      Somme Engranger :{' '}
+                      {Math.round((thj / 7) * (elapsTime / 1000 / 60 / 60), -2)}{' '}
+                      &euro;
+                    </h4>
+                  </div>
+                </div>
+              </div>
 
-          <div className="card text-dark mt-2">
-            <div className="card-header">
-              <h4 className="font-weight-bold text-center">
-                Taux Horaire journalier
-              </h4>
+              <div className="d-flex justify-content-center mt-3">
+                <Link
+                  to={`/task-edit/${this.state.id}`}
+                  className="btn btn-primary mx-3"
+                >
+                  Edit
+                </Link>
+                <button
+                  className="btn btn-danger"
+                  onClick={() => this.toggleModalSuppTask(this.state.id)}
+                >
+                  Delete
+                </button>
+              </div>
             </div>
-            <div className="card-body">
-              <h2>{thj} &euro;</h2>
-            </div>
-          </div>
-
-          <div className="card text-dark mt-2">
-            <div className="card-header">
-              <h4 className="font-weight-bold text-center">
-                Temp passé sur la tache
-              </h4>
-            </div>
-            <div className="card-body">
-              <h2>{formatDuration(elapsTime)}</h2>
-            </div>
-          </div>
-
-          <div className="card text-dark mt-2">
-            <div className="card-header bg-darkblue">
-              <h4 className="font-weight-bold text-center text-light">
-                Somme Engranger
-              </h4>
-            </div>
-            <div className="card-body">
-              <h2>
-                {Math.round((thj / 7) * (elapsTime / 1000 / 60 / 60), -2)}{' '}
-                &euro;
-              </h2>
-            </div>
-          </div>
-
-          <div className="d-flex justify-content-center mt-3">
-            <Link
-              to={`/task-edit/${this.state.id}`}
-              className="btn btn-primary mx-3"
-            >
-              Edit
-            </Link>
-            <button
-              className="btn btn-danger"
-              onClick={() => this.toggleModalSuppTask(this.state.id)}
-            >
-              Delete
-            </button>
           </div>
         </div>
       );
