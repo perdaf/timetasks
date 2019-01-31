@@ -30,7 +30,7 @@ class Home extends Component {
   }
 
   render() {
-    console.log('RENDER >>>');
+    // console.log('RENDER >>>');
 
     // loop in task and show if tasks.lenght > 0
     let tasks = <h2 className="text-dark text-center">Aucune tache</h2>;

@@ -31,8 +31,9 @@ export default function SignInLink() {
           className="nav-link text-light font-weight-bold bg-primary rounded-circle"
           style={{
             display: 'inlinBlock',
+            boxSizing: 'border-box',
             position: 'relative',
-            width: '45px',
+            width: '51px',
             textIndent: '-3px',
             fontSize: '1.5rem',
             top: '-5px',

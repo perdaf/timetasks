@@ -8,6 +8,8 @@ import NotFound from '../pages/NotFound';
 import AddTask from '../pages/AddTask';
 import TaskDetail from '../pages/TaskDetail';
 import TaskEdit from '../pages/TaskEdit';
+import SignIn from '../pages/auth/SignIn';
+import SignUp from '../pages/auth/SignUp';
 
 class App extends Component {
   render() {
@@ -20,6 +22,8 @@ class App extends Component {
               <Route exact path="/" component={Home} />
               <Route exact path="/add-task" component={AddTask} />
               <Route exact path="/about" component={About} />
+              <Route exact path="/signin" component={SignIn} />
+              <Route exact path="/signup" component={SignUp} />
               <Route exact path="/task-detail/:id" component={TaskDetail} />
               <Route exact path="/task-edit/:id" component={TaskEdit} />
               <Route component={NotFound} />

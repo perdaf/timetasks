@@ -36,14 +36,14 @@ class Timer extends Component {
       clearInterval(this.timeInterval);
     }
 
-    console.log('total time elaps >>> ', this.state.totalTimeElaps);
+    // console.log('total time elaps >>> ', this.state.totalTimeElaps);
 
     const TimeToSave = this.state.totalTimeElaps * 1000 + this.state.baseTime;
     this.props.EditTimeTask(TimeToSave, this.props.taskId);
   }
 
   resetTimer = () => {
-    console.log('reset timer');
+    // console.log('reset timer');
     if (this.timeInterval != null) {
       clearInterval(this.timeInterval);
     }
