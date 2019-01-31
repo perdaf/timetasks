@@ -1,14 +1,9 @@
 import React, { Component } from 'react';
-// import Task from '../components/task/task';
+
 import formatDuration from 'format-duration';
 import { Link } from 'react-router-dom';
 
-// import * as $ from 'jquery';
-
-// import Modal from '../components/layout/modal/Modal';
-
 import { connect } from 'react-redux';
-// import { deleteTask, editTask } from '../store/actions/taskAction';
 import { firestoreConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
 
@@ -103,5 +98,5 @@ export default compose(
     mapStateToProps
     // mapDispatchToProps
   ),
-  firestoreConnect([{ collection: 'Tasks' }])
+  firestoreConnect([{ collection: 'Tasks', orderBy: ['createdAt', 'desc'] }])
 )(Home);

@@ -79,7 +79,7 @@ class TaskDetail extends Component {
                         </div>
                         <div className="col-sm">
                           {(createdAt &&
-                            moment(createdAt.toDate()).format('L')) ||
+                            moment(createdAt.toDate()).format('DD/MM/YYYY')) ||
                             '--'}
                         </div>
                       </div>
@@ -103,15 +103,19 @@ class TaskDetail extends Component {
                   <div>
                     <Timer taskId={this.state.id} taskElapsTime={elapsTime} />
                   </div>
+                </div>
+              </div>
+              <ul className="list-group list-group-flush">
+                <li className="list-group-item bg-light">
                   <div>
-                    <h4 className="font-weight-bold">
+                    <h4 className="font-weight-bold text-center py-3">
                       Somme Engranger :{' '}
-                      {Math.round((thj / 7) * (elapsTime / 1000 / 60 / 60), -2)}{' '}
+                      {Math.round((thj / 7) * (elapsTime / 1000 / 60 / 60))}{' '}
                       &euro;
                     </h4>
                   </div>
-                </div>
-              </div>
+                </li>
+              </ul>
 
               <div className="d-flex justify-content-center mt-3">
                 <Link

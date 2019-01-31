@@ -31,10 +31,29 @@ class Timer extends Component {
   }
 
   componentWillUnmount() {
+    // if timer dont stop
+    if (this.timeInterval != null) {
+      clearInterval(this.timeInterval);
+    }
+
     console.log('total time elaps >>> ', this.state.totalTimeElaps);
-    const TimeToSave = (this.state.totalTimeElaps * 1000) + this.state.baseTime;
+
+    const TimeToSave = this.state.totalTimeElaps * 1000 + this.state.baseTime;
     this.props.EditTimeTask(TimeToSave, this.props.taskId);
   }
+
+  resetTimer = () => {
+    console.log('reset timer');
+    if (this.timeInterval != null) {
+      clearInterval(this.timeInterval);
+    }
+    this.setState({
+      timerDisplay: this.props.taskElapsTime,
+      totalTimeElaps: 0,
+      startCount: false,
+      timingEvents: [],
+    });
+  };
 
   startInterval = () => {
     // si setInterva exit et n'es pas nul on le kill
@@ -52,7 +71,7 @@ class Timer extends Component {
   tick = () => {
     this.setState(prevState => ({
       timerDisplay: prevState.timerDisplay + 1000,
-      totalTimeElaps: prevState.totalTimeElaps + 1
+      totalTimeElaps: prevState.totalTimeElaps + 1,
     }));
   };
 
@@ -85,15 +104,22 @@ class Timer extends Component {
 
   render() {
     return (
-      <div className="d-flex align-items-center">
-        <div className="timer-display">
+      <div>
+        <div className="d-flex align-items-center">
           <TimeDisplay timeElaps={this.state.timerDisplay} />
-        </div>
-        <div className="timer-button">
           <ButtonTimer
             handleClick={this.addTimerEvent}
             timingEvents={this.state.timingEvents}
           />
+        </div>
+        <br />
+        <div className="row">
+          <button
+            className="btn btn-danger btn-block mb-3"
+            onClick={this.resetTimer}
+          >
+            Reset Timer
+          </button>
         </div>
       </div>
     );
