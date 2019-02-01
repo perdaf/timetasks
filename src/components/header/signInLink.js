@@ -2,7 +2,11 @@ import React from 'react';
 
 import { NavLink } from 'react-router-dom';
 
-export default function SignInLink() {
+import { connect } from 'react-redux';
+import { signOut } from '../../store/actions/authAction';
+
+const SignInLink = props => {
+  const { user } = props;
   return (
     <React.Fragment>
       <li className="nav-item">
@@ -21,9 +25,9 @@ export default function SignInLink() {
         </NavLink>
       </li>
       <li className="nav-item">
-        <NavLink to="/logout" className="nav-link text-light">
+        <a href="#/" className="nav-link text-light" onClick={props.onLogOut}>
           Logout
-        </NavLink>
+        </a>
       </li>
       <li className="nav-item">
         <NavLink
@@ -39,9 +43,26 @@ export default function SignInLink() {
             top: '-5px',
           }}
         >
-          SP
+          {user.initials}
         </NavLink>
       </li>
     </React.Fragment>
   );
-}
+};
+const mapStateToProps = state => {
+  console.log('header > State >>>', state);
+  return {
+    user: state.firebase.profile,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onLogOut: () => dispatch(signOut()),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SignInLink);

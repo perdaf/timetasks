@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import formatDuration from 'format-duration';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 import { connect } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
@@ -30,7 +30,9 @@ class Home extends Component {
   }
 
   render() {
-    // console.log('RENDER >>>');
+    // redirect to signin in not connected
+    const { auth } = this.props;
+    if (!auth.uid) return <Redirect to="/signin" />;
 
     // loop in task and show if tasks.lenght > 0
     let tasks = <h2 className="text-dark text-center">Aucune tache</h2>;
@@ -90,6 +92,7 @@ class Home extends Component {
 const mapStateToProps = state => {
   return {
     tasks: state.firestore.ordered.Tasks || [],
+    auth: state.firebase.auth,
   };
 };
 

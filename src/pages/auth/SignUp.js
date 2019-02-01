@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import classnames from 'classnames';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+import { signUp } from '../../store/actions/authAction';
 
 class SignUp extends Component {
   state = {
@@ -53,20 +56,24 @@ class SignUp extends Component {
     };
     console.log('le nouvel utilisateur es >>>', newUser);
     // add the new task to firestore
-    // this.props.onAddTask(newtask);
+    this.props.onSignUp(newUser);
 
     // clear the state
-    this.setState({
-      email: '',
-      password: '',
-      firstName: '',
-      lastName: '',
-      errors: {},
-    });
-    this.props.history.push(`/`);
+    // this.setState({
+    //   email: '',
+    //   password: '',
+    //   firstName: '',
+    //   lastName: '',
+    //   errors: {},
+    // });
+    // this.props.history.push(`/`);
   };
 
   render() {
+    // redirect to home cause i'm already connected
+    console.log('this props >>>', this.props);
+    const { auth, authError } = this.props;
+    if (auth.uid) return <Redirect to="/" />;
     return (
       <div>
         <div className="card">
@@ -151,6 +158,12 @@ class SignUp extends Component {
                 </div>
               )}
             </div>
+            <div
+              className="text-center mb-3"
+              style={{ color: 'red', fontSize: '2rem' }}
+            >
+              {authError ? <p>{authError}</p> : null}
+            </div>
 
             <div className="form-group d-flex justify-content-center">
               <input
@@ -165,5 +178,21 @@ class SignUp extends Component {
     );
   }
 }
+const mapStateToProps = state => {
+  console.log('mapstateToProps > states >>>', state);
+  return {
+    auth: state.firebase.auth,
+    authError: state.auth.authError,
+  };
+};
 
-export default SignUp;
+const mapDispatchToProps = dispatch => {
+  return {
+    onSignUp: newUser => dispatch(signUp(newUser)),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SignUp);

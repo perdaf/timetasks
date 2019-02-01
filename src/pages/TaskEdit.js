@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import TaskForm from '../components/layout/taskForm/TaskForm';
 
+import { Redirect } from 'react-router-dom';
+
 import { connect } from 'react-redux';
 import { editTask } from '../store/actions/taskAction';
 import { firestoreConnect } from 'react-redux-firebase';
@@ -100,6 +102,9 @@ class TaskEdit extends Component {
   };
 
   render() {
+    // redirect to signin in not connected
+    const { auth } = this.props;
+    if (!auth.uid) return <Redirect to="/signin" />;
     if (this.props.task) {
       const { name, desc, thj } = this.props.task;
       return (
@@ -143,6 +148,7 @@ const mapStateToProps = (state, ownProps) => {
   const task = tasks ? tasks[id] : null;
   return {
     task: task,
+    auth: state.firebase.auth,
   };
 };
 

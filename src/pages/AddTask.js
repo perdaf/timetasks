@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import TaskForm from '../components/layout/taskForm/TaskForm';
 
+import { Redirect } from 'react-router-dom';
+
 import { connect } from 'react-redux';
 import { createTask } from '../store/actions/taskAction';
 import { firestoreConnect } from 'react-redux-firebase';
@@ -62,6 +64,9 @@ class AddTask extends Component {
   };
 
   render() {
+    // redirect to signin in not connected
+    const { auth } = this.props;
+    if (!auth.uid) return <Redirect to="/signin" />;
     return (
       <div>
         <div className="card">
@@ -80,6 +85,12 @@ class AddTask extends Component {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    auth: state.firebase.auth,
+  };
+};
+
 const mapDispatchToProps = dispatch => {
   return {
     onAddTask: task => dispatch(createTask(task)),
@@ -88,7 +99,7 @@ const mapDispatchToProps = dispatch => {
 
 export default compose(
   connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
   ),
   firestoreConnect([{ collection: 'Tasks' }])

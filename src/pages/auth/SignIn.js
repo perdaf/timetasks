@@ -1,12 +1,31 @@
 import React, { Component } from 'react';
 import classnames from 'classnames';
 
+import { connect } from 'react-redux';
+import { signIn } from '../../store/actions/authAction';
+import { Redirect } from 'react-router-dom';
+
 class SignIn extends Component {
   state = {
     email: '',
     password: '',
     errors: {},
+    authError: null,
   };
+
+  // componentDidUpdate(prevProps) {
+  //   const newProps = this.props;
+  //   if (newProps.authError !== prevProps.authError) {
+  //     this.setState(
+  //       {
+  //         authError: this.props.authError,
+  //       },
+  //       () => {
+  //         console.log('state mise a jour >>>', this.state.authError);
+  //       }
+  //     );
+  //   }
+  // }
 
   handleOnChange = e => {
     e.preventDefault();
@@ -35,20 +54,29 @@ class SignIn extends Component {
       email,
       password,
     };
-    console.log("l'utilisateur es >>>", user);
-    // add the new task to firestore
-    // this.props.onAddTask(newtask);
 
-    // clear the state
-    this.setState({
-      email: '',
-      password: '',
-      errors: {},
-    });
-    this.props.history.push(`/`);
+    // auth the user
+    this.props.onSignIn(user);
+
+    //   if (authError !== null) {
+    //     console.log("Message d'erreur >>>", authError);
+    //   } else {
+    //     console.log('authError >>>', authError);
+    //     // clear the state
+    //     this.setState({
+    //       email: '',
+    //       password: '',
+    //       errors: {},
+    //       authError: null,
+    //     });
+    //     // this.props.history.push(`/`);
+    //   }
   };
 
   render() {
+    const { authError, auth } = this.props;
+    // redirect to home cause i'm already connected
+    if (auth.uid) return <Redirect to="/" />;
     return (
       <div>
         <div className="card">
@@ -95,6 +123,12 @@ class SignIn extends Component {
                 </div>
               )}
             </div>
+            <div
+              className="text-center mb-3"
+              style={{ color: 'red', fontSize: '2rem' }}
+            >
+              {authError ? <p>{authError}</p> : null}
+            </div>
 
             <div className="form-group d-flex justify-content-center">
               <input
@@ -109,5 +143,20 @@ class SignIn extends Component {
     );
   }
 }
+const mapStateToProps = state => {
+  return {
+    authError: state.auth.authError,
+    auth: state.firebase.auth,
+  };
+};
 
-export default SignIn;
+const mapDispatchToProps = dispatch => {
+  return {
+    onSignIn: user => dispatch(signIn(user)),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SignIn);
