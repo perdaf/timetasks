@@ -35,12 +35,17 @@ const SignInLink = props => {
           className="nav-link text-light font-weight-bold bg-primary rounded-circle"
           style={{
             display: 'inlinBlock',
+            margin: '0',
+            padding: '0',
             boxSizing: 'border-box',
             position: 'relative',
-            width: '51px',
-            textIndent: '-3px',
+            width: '45px',
+            height: '45px',
+            lineHeight: '40px',
+            textAlign: 'center',
             fontSize: '1.5rem',
             top: '-5px',
+            textTransform: 'uppercase',
           }}
         >
           {user.initials}

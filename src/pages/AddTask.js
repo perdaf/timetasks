@@ -5,8 +5,6 @@ import { Redirect } from 'react-router-dom';
 
 import { connect } from 'react-redux';
 import { createTask } from '../store/actions/taskAction';
-import { firestoreConnect } from 'react-redux-firebase';
-import { compose } from 'redux';
 
 class AddTask extends Component {
   constructor(props) {
@@ -15,6 +13,7 @@ class AddTask extends Component {
     this.state = {
       name: '',
       desc: '',
+      deadLine: '',
       thj: 0,
       elapsTime: 0,
       errors: {},
@@ -30,7 +29,8 @@ class AddTask extends Component {
 
   handleOnSubmit = e => {
     e.preventDefault();
-    const { name, desc, thj, elapsTime } = this.state;
+    const { name, desc, thj, elapsTime, deadLine } = this.state;
+    const { user } = this.props;
 
     if (name === '') {
       this.setState({ errors: { name: 'Le nom de la tache es requis' } });
@@ -42,12 +42,21 @@ class AddTask extends Component {
       });
       return;
     }
+    if (deadLine === '') {
+      this.setState({
+        errors: { deadLine: 'La date de fin es requise' },
+      });
+      return;
+    }
 
+    const userName = user.lastName + ' ' + user.firstName;
     let newtask = {
       name,
       desc,
+      deadLine,
       thj,
       elapsTime,
+      createdBy: userName,
     };
     // add the new task to firestore
     this.props.onAddTask(newtask);
@@ -56,6 +65,7 @@ class AddTask extends Component {
     this.setState({
       name: '',
       desc: '',
+      deadLine: '',
       thj: 0,
       elapsTime: 0,
       errors: {},
@@ -88,6 +98,7 @@ class AddTask extends Component {
 const mapStateToProps = state => {
   return {
     auth: state.firebase.auth,
+    user: state.firebase.profile,
   };
 };
 
@@ -97,10 +108,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  ),
-  firestoreConnect([{ collection: 'Tasks' }])
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
 )(AddTask);

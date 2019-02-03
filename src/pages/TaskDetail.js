@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 
-import formatDuration from 'format-duration';
 import moment from 'moment';
+import 'moment-duration-format';
 
 import * as $ from 'jquery';
 
@@ -39,7 +39,15 @@ class TaskDetail extends Component {
     const { auth } = this.props;
     if (!auth.uid) return <Redirect to="/signin" />;
     if (this.props.task) {
-      const { name, desc, thj, elapsTime, createdAt } = this.props.task;
+      const {
+        name,
+        desc,
+        thj,
+        elapsTime,
+        createdAt,
+        deadLine,
+        createdBy,
+      } = this.props.task;
       return (
         <div>
           <Modal
@@ -50,8 +58,11 @@ class TaskDetail extends Component {
           />
 
           <div className="card text-dark mt-2">
-            <div className="card-header">
-              <h4 className="font-weight-bold text-center">Task Detail</h4>
+            <div className="card-header text-center">
+              <h4 className="font-weight-bold" style={{ fontSize: '2rem' }}>
+                {name}
+              </h4>
+              <small>Created by {createdBy ? createdBy : '--'}</small>
             </div>
             <div className="card-body">
               <div className="row">
@@ -59,17 +70,7 @@ class TaskDetail extends Component {
                   <ul className="list-group list-group-flush">
                     <li className="list-group-item">
                       <div className="row">
-                        <div className="col-sm-3">
-                          <h5 className="font-weight-bold">Nom:</h5>
-                        </div>
-                        <div className="col-sm">
-                          <p>{name}</p>
-                        </div>
-                      </div>
-                    </li>
-                    <li className="list-group-item">
-                      <div className="row">
-                        <div className="col-sm-3">
+                        <div className="col-sm-4">
                           <h5 className="font-weight-bold">Desc:</h5>
                         </div>
                         <div className="col-sm">{desc}</div>
@@ -77,7 +78,7 @@ class TaskDetail extends Component {
                     </li>
                     <li className="list-group-item">
                       <div className="row">
-                        <div className="col-sm-3">
+                        <div className="col-sm-4">
                           <h5 className="font-weight-bold">Créer le:</h5>
                         </div>
                         <div className="col-sm">
@@ -89,7 +90,19 @@ class TaskDetail extends Component {
                     </li>
                     <li className="list-group-item">
                       <div className="row">
-                        <div className="col-sm-3">
+                        <div className="col-sm-4">
+                          <h5 className="font-weight-bold">Date de fin :</h5>
+                        </div>
+                        <div className="col-sm">
+                          {(deadLine &&
+                            moment(deadLine).format('DD/MM/YYYY')) ||
+                            '--'}
+                        </div>
+                      </div>
+                    </li>
+                    <li className="list-group-item">
+                      <div className="row">
+                        <div className="col-sm-4">
                           <h5 className="font-weight-bold">THJ:</h5>
                         </div>
                         <div className="col-sm">{thj} &euro;</div>
@@ -97,10 +110,13 @@ class TaskDetail extends Component {
                     </li>
                   </ul>
                 </div>
-                <div className="col-sm-6 text-center d-flex flex-column justify-content-between align-items-center">
+                <div className="col-sm-6 text-center">
                   <div>
                     <h4 className="font-weight-bold">
-                      Temp passé sur la tache : {formatDuration(elapsTime)}
+                      Temp passé sur la tache :{' '}
+                      {moment
+                        .duration(elapsTime, 'milliseconds')
+                        .format('hh:mm:ss', { trim: false })}
                     </h4>
                   </div>
                   <div>
@@ -164,9 +180,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    // onAddTask: task => dispatch(createTask(task)),
     onDeleteTask: id => dispatch(deleteTask(id)),
-    // onEditTask: (id, args) => dispatch(editTask(id, args)),
   };
 };
 

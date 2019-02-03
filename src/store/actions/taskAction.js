@@ -36,14 +36,16 @@ export const editTask = (id, task) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     // async call to db
     const firestore = getFirestore();
+    const { name, desc, deadLine, thj } = task;
     firestore
       .collection('Tasks')
       .doc(id)
       .set(
         {
-          name: task.name,
-          desc: task.desc,
-          thj: task.thj,
+          name,
+          desc,
+          deadLine,
+          thj,
         },
         { merge: true }
       )

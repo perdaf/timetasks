@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import formatDuration from 'format-duration';
+
+import moment from 'moment';
+import 'moment-duration-format';
 
 class TimeDisplay extends Component {
   constructor(props) {
@@ -14,7 +16,9 @@ class TimeDisplay extends Component {
   componentDidUpdate(prevProps) {
     if (this.props.timeElaps !== prevProps.timeElaps) {
       // console.log('PROPS NON IDENTIQUE >>>', this.props.timeElaps);
-      let time = formatDuration(this.props.timeElaps);
+      let time = moment
+        .duration(this.props.timeElaps, 'milliseconds')
+        .format('hh:mm:ss', { trim: false });
       this.setState({
         affTime: this.props.timeElaps,
         time,

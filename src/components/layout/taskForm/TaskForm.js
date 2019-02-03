@@ -42,6 +42,24 @@ const TaskForm = props => {
         )}
       </div>
       <div className="form-group text-dark px-4">
+        <label htmlFor="deadLine">Date de fin</label>
+        <input
+          type="date"
+          autoComplete="date de fin"
+          className={classnames('form-control', {
+            'is-invalid': props.errors.deadLine,
+          })}
+          name="deadLine"
+          id="deadLine"
+          onChange={props.handleOnChange}
+          placeholder="Entrer la date de fin"
+          defaultValue={props.valueDeadLine}
+        />
+        {props.errors.deadLine && (
+          <div className="invalid-feedback">{props.errors.deadLine}</div>
+        )}
+      </div>
+      <div className="form-group text-dark px-4">
         <label htmlFor="taskDescription">Taux Horaire Journalier</label>
         <input
           type="text"

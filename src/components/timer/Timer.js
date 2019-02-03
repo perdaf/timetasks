@@ -4,10 +4,9 @@ import TimeDisplay from './TimeDisplay';
 
 import ButtonTimer from './ButtonTimer';
 
-import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { firestoreConnect } from 'react-redux-firebase';
 import { editElapsTimeTask } from '../../store/actions/taskAction';
+
 class Timer extends Component {
   constructor(props) {
     super(props);
@@ -42,8 +41,44 @@ class Timer extends Component {
     this.props.EditTimeTask(TimeToSave, this.props.taskId);
   }
 
+  componentDidUpdate(prevProps) {
+    const newProps = this.props;
+    if (newProps.taskElapsTime !== prevProps.taskElapsTime) {
+      this.setState({
+        timerDisplay: this.props.taskElapsTime,
+        baseTime: this.props.taskElapsTime,
+      });
+    }
+  }
+
+  saveTime = prevProps => {
+    // stop interval if exist
+    if (this.timeInterval != null) {
+      clearInterval(this.timeInterval);
+    }
+    // calc the time elapsed
+    const TimeToSave = this.state.totalTimeElaps * 1000 + this.state.baseTime;
+
+    // compare time to see if it's change
+    if (TimeToSave !== this.props.taskElapsTime) {
+      // save time
+      this.props.EditTimeTask(TimeToSave, this.props.taskId);
+      // reset state
+      // this.forceUpdate();
+      this.setState({
+        timerDisplay: this.props.taskElapsTime,
+        baseTime: this.props.taskElapsTime,
+        totalTimeElaps: 0,
+        startCount: false,
+        timingEvents: [],
+      });
+    } else {
+      console.log('temp identique');
+    }
+  };
+
   resetTimer = () => {
-    // console.log('reset timer');
+    // console.log('reset timer', );
     if (this.timeInterval != null) {
       clearInterval(this.timeInterval);
     }
@@ -88,36 +123,24 @@ class Timer extends Component {
         this.startInterval();
       }
     );
-
-    if (!stCount) {
-      // let elapsed_time = this.state.baseTime;
-      // // -------------------------------------------------------
-      // for (let i = 0; i < this.state.timingEvents.length; i += 2) {
-      //   const start = this.state.timingEvents[i];
-      //   const stop = this.state.timingEvents[i + 1] || new Date();
-      //   elapsed_time += stop - start;
-      // }
-      // this.setState({ totalTimeElaps: elapsed_time });
-      // this.props.EditTimeTask(elapsed_time, this.props.taskId);
-    }
   };
 
   render() {
     return (
-      <div>
-        <div className="d-flex align-items-center">
+      <div className="d-flex align-items-center flex-column justify-content-between">
+        <div className="d-flex flex-row m-3">
           <TimeDisplay timeElaps={this.state.timerDisplay} />
           <ButtonTimer
+            className="align-self-center"
             handleClick={this.addTimerEvent}
             timingEvents={this.state.timingEvents}
           />
         </div>
-        <br />
-        <div className="row">
-          <button
-            className="btn btn-danger btn-block mb-3"
-            onClick={this.resetTimer}
-          >
+        <div>
+          <button className="btn btn-info mb-3 mr-3" onClick={this.saveTime}>
+            Save Time
+          </button>
+          <button className="btn btn-danger mb-3" onClick={this.resetTimer}>
             Reset Timer
           </button>
         </div>
@@ -132,10 +155,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default compose(
-  connect(
-    null,
-    mapDispatchToProps
-  ),
-  firestoreConnect([{ collection: 'Tasks' }])
+export default connect(
+  null,
+  mapDispatchToProps
 )(Timer);

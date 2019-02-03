@@ -15,6 +15,7 @@ class TaskEdit extends Component {
     this.state = {
       name: '',
       desc: '',
+      deadLine: '',
       thj: '',
       errors: {},
     };
@@ -67,8 +68,9 @@ class TaskEdit extends Component {
 
   handleOnSubmit = e => {
     e.preventDefault();
+    console.log('Submit >>>', this.state);
 
-    const { name, desc, thj } = this.state;
+    const { name, desc, deadLine, thj } = this.state;
     const id = this.props.match.params.id;
 
     if (name === '') {
@@ -81,10 +83,17 @@ class TaskEdit extends Component {
       });
       return;
     }
+    if (deadLine === '') {
+      this.setState({
+        errors: { deadLine: 'La date de fin es requise' },
+      });
+      return;
+    }
 
     let newtask = {
       name,
       desc,
+      deadLine,
       thj,
     };
 
@@ -95,6 +104,7 @@ class TaskEdit extends Component {
     this.setState({
       name: '',
       desc: '',
+      deadLine: '',
       thj: '',
       errors: {},
     });
@@ -106,7 +116,7 @@ class TaskEdit extends Component {
     const { auth } = this.props;
     if (!auth.uid) return <Redirect to="/signin" />;
     if (this.props.task) {
-      const { name, desc, thj } = this.props.task;
+      const { name, desc, thj, deadLine } = this.props.task;
       return (
         <div>
           <div className="card">
@@ -123,6 +133,7 @@ class TaskEdit extends Component {
               valueName={name}
               valueDesc={desc}
               valueThj={thj}
+              valueDeadLine={deadLine}
               errors={this.state.errors}
             />
           </div>

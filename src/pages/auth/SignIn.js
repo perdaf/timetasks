@@ -13,20 +13,6 @@ class SignIn extends Component {
     authError: null,
   };
 
-  // componentDidUpdate(prevProps) {
-  //   const newProps = this.props;
-  //   if (newProps.authError !== prevProps.authError) {
-  //     this.setState(
-  //       {
-  //         authError: this.props.authError,
-  //       },
-  //       () => {
-  //         console.log('state mise a jour >>>', this.state.authError);
-  //       }
-  //     );
-  //   }
-  // }
-
   handleOnChange = e => {
     e.preventDefault();
     const { name, value } = e.target;
@@ -57,20 +43,6 @@ class SignIn extends Component {
 
     // auth the user
     this.props.onSignIn(user);
-
-    //   if (authError !== null) {
-    //     console.log("Message d'erreur >>>", authError);
-    //   } else {
-    //     console.log('authError >>>', authError);
-    //     // clear the state
-    //     this.setState({
-    //       email: '',
-    //       password: '',
-    //       errors: {},
-    //       authError: null,
-    //     });
-    //     // this.props.history.push(`/`);
-    //   }
   };
 
   render() {

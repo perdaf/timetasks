@@ -57,16 +57,6 @@ class SignUp extends Component {
     console.log('le nouvel utilisateur es >>>', newUser);
     // add the new task to firestore
     this.props.onSignUp(newUser);
-
-    // clear the state
-    // this.setState({
-    //   email: '',
-    //   password: '',
-    //   firstName: '',
-    //   lastName: '',
-    //   errors: {},
-    // });
-    // this.props.history.push(`/`);
   };
 
   render() {
