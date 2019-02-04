@@ -1,0 +1,25 @@
+@import '../../scss/variables';
+
+button {
+  color: #fff;
+  background: none;
+  border: none;
+  &:hover {
+    background: none;
+    border: none;
+    color: $gray-400;
+  }
+  &:focus {
+    outline: none;
+  }
+}
+
+.dropdown-item {
+  background: none;
+  &:hover {
+    background: none;
+  }
+}
+.dropdown-item.active {
+  background: none;
+}

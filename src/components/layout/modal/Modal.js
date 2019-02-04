@@ -13,7 +13,11 @@ const Modal = props => {
       <div className="modal-dialog" role="document">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title" id="exampleModalLabel">
+            <h5
+              className="modal-title font-weight-bold"
+              id="exampleModalLabel"
+              style={{ fontSize: '2rem' }}
+            >
               {props.ModalTitle}
             </h5>
             <button
@@ -25,7 +29,12 @@ const Modal = props => {
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div className="modal-body">{props.ModalContent}</div>
+          <div
+            className="modal-body text-center"
+            style={{ fontSize: '1.2rem' }}
+          >
+            {props.ModalContent}
+          </div>
           <div className="modal-footer">
             <button
               type="button"

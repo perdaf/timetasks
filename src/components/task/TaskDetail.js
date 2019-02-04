@@ -6,11 +6,11 @@ import 'moment-duration-format';
 
 import * as $ from 'jquery';
 
-import Modal from '../components/layout/modal/Modal';
-import Timer from '../components/timer/Timer';
+import Modal from '../layout/modal/Modal';
+import Timer from '../timer/Timer';
 
 import { connect } from 'react-redux';
-import { deleteTask } from '../store/actions/taskAction';
+import { deleteTask } from '../../store/actions/taskAction';
 import { firestoreConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
 
@@ -36,7 +36,18 @@ class TaskDetail extends Component {
 
   render() {
     // redirect to signin in not connected
-    const { auth } = this.props;
+    const { auth, user } = this.props;
+
+    const userName = taskCreator => {
+      const usercreator = user.filter(user => user.id === taskCreator);
+      // console.log('USERCREATOR >>>', usercreator);
+      if (usercreator.length > 0) {
+        return usercreator[0].lastName + ' ' + usercreator[0].firstName;
+      } else {
+        return '--';
+      }
+    };
+
     if (!auth.uid) return <Redirect to="/signin" />;
     if (this.props.task) {
       const {
@@ -62,7 +73,7 @@ class TaskDetail extends Component {
               <h4 className="font-weight-bold" style={{ fontSize: '2rem' }}>
                 {name}
               </h4>
-              <small>Created by {createdBy ? createdBy : '--'}</small>
+              <small>Created by {userName(createdBy)}</small>
             </div>
             <div className="card-body">
               <div className="row">
@@ -172,9 +183,11 @@ const mapStateToProps = (state, ownProps) => {
   const id = ownProps.match.params.id;
   const tasks = state.firestore.data.Tasks;
   const task = tasks ? tasks[id] : null;
+  const users = state.firestore.ordered.users;
   return {
     task: task,
     auth: state.firebase.auth,
+    user: users ? users : [],
   };
 };
 
@@ -189,5 +202,8 @@ export default compose(
     mapStateToProps,
     mapDispatchToProps
   ),
-  firestoreConnect([{ collection: 'Tasks' }])
+  firestoreConnect([
+    { collection: 'Tasks', orderBy: ['createdAt', 'desc'] },
+    { collection: 'users', orderBy: ['lastName', 'desc'] },
+  ])
 )(TaskDetail);

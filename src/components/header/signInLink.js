@@ -1,4 +1,5 @@
 import React from 'react';
+import './signlinkin.scss';
 
 import { NavLink } from 'react-router-dom';
 
@@ -6,7 +7,7 @@ import { connect } from 'react-redux';
 import { signOut } from '../../store/actions/authAction';
 
 const SignInLink = props => {
-  const { user } = props;
+  const { user, auth } = props;
   return (
     <React.Fragment>
       <li className="nav-item">
@@ -14,10 +15,25 @@ const SignInLink = props => {
           <i className="fas fa-home" /> Home
         </NavLink>
       </li>
-      <li className="nav-item">
-        <NavLink to="/add-task" className="nav-link text-light">
-          <i className="fas fa-plus" /> Add Task
-        </NavLink>
+      <li className="nav-item dropdown">
+        <button
+          className="nav-link dropdown-toggle"
+          data-toggle="dropdown"
+          href="#"
+          // role="button"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          Project/task
+        </button>
+        <div className="dropdown-menu bg-dark">
+          <NavLink to="/add-project" className="dropdown-item text-light">
+            <i className="fas fa-plus" /> Add Project
+          </NavLink>
+          <NavLink to="/add-task" className="dropdown-item text-light">
+            <i className="fas fa-plus" /> Add Task
+          </NavLink>
+        </div>
       </li>
       <li className="nav-item">
         <NavLink to="/about" className="nav-link text-light">
@@ -31,7 +47,7 @@ const SignInLink = props => {
       </li>
       <li className="nav-item">
         <NavLink
-          to="/userDetail"
+          to={`/user-detail/${auth.uid}`}
           className="nav-link text-light font-weight-bold bg-primary rounded-circle"
           style={{
             display: 'inlinBlock',
@@ -58,6 +74,7 @@ const mapStateToProps = state => {
   console.log('header > State >>>', state);
   return {
     user: state.firebase.profile,
+    auth: state.firebase.auth,
   };
 };
 

@@ -1,0 +1,29 @@
+@import '../scss/variables';
+
+.btn-down {
+  color: $dark;
+  font-size: 1.5rem;
+
+  &:focus {
+    outline: 0;
+  }
+
+  &.btnUp::after {
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    content: '\f078';
+    color: $light-orange;
+  }
+  &.btnDown::after {
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    content: '\f077';
+    color: $dark-orange;
+  }
+}
+.cardDeploy {
+  display: block;
+}
+.cardNotDeploy {
+  display: none;
+}

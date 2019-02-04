@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import TaskForm from '../components/layout/taskForm/TaskForm';
 
 import { Redirect } from 'react-router-dom';
 
 import { connect } from 'react-redux';
 import { createTask } from '../store/actions/taskAction';
 
-class AddTask extends Component {
+class AddProject extends Component {
   constructor(props) {
     super(props);
 
@@ -29,9 +28,8 @@ class AddTask extends Component {
 
   handleOnSubmit = e => {
     e.preventDefault();
-    const { name, desc, elapsTime, deadLine } = this.state;
+    const { name, desc, thj, elapsTime, deadLine } = this.state;
     const { user } = this.props;
-    const { auth } = this.props;
 
     if (name === '') {
       this.setState({ errors: { name: 'Le nom de la tache es requis' } });
@@ -50,12 +48,12 @@ class AddTask extends Component {
       return;
     }
 
-    const userName = auth.uid;
+    const userName = user.lastName + ' ' + user.firstName;
     let newtask = {
       name,
       desc,
       deadLine,
-      thj: user.thj,
+      thj,
       elapsTime,
       createdBy: userName,
     };
@@ -80,16 +78,17 @@ class AddTask extends Component {
     if (!auth.uid) return <Redirect to="/signin" />;
     return (
       <div>
-        <div className="card">
-          <div className="card-header text-dark" style={{ fontSize: '1.5rem' }}>
-            + ajouter une tache
+        <div className="card text-dark">
+          <div className="card-header" style={{ fontSize: '1.5rem' }}>
+            + ajouter un projet
           </div>
-          <div className="card-body" />
-          <TaskForm
+          <div className="card-body " />
+          <h1>Add project</h1>
+          {/* <TaskForm
             handleOnChange={this.handleOnChange}
             handleOnSubmit={this.handleOnSubmit}
             errors={this.state.errors}
-          />
+          /> */}
         </div>
       </div>
     );
@@ -112,4 +111,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(AddTask);
+)(AddProject);

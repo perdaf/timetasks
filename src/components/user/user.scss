@@ -1,0 +1,8 @@
+@import '../../scss/variables';
+
+.desactivated {
+  pointer-events: none;
+  cursor: default;
+  color: #fff;
+  background: rgba($dark-gray, 0.4);
+}

@@ -6,10 +6,12 @@ import About from '../pages/About';
 import Header from './header/header';
 import NotFound from '../pages/NotFound';
 import AddTask from '../pages/AddTask';
-import TaskDetail from '../pages/TaskDetail';
-import TaskEdit from '../pages/TaskEdit';
+import TaskDetail from '../components/task/TaskDetail';
+import TaskEdit from '../components/task/TaskEdit';
 import SignIn from '../pages/auth/SignIn';
 import SignUp from '../pages/auth/SignUp';
+import AddProject from '../pages/AddProject';
+import UserDetail from './user/UserDetail';
 
 class App extends Component {
   render() {
@@ -21,9 +23,11 @@ class App extends Component {
             <Switch>
               <Route exact path="/" component={Home} />
               <Route exact path="/add-task" component={AddTask} />
+              <Route exact path="/add-project" component={AddProject} />
               <Route exact path="/about" component={About} />
               <Route exact path="/signin" component={SignIn} />
               <Route exact path="/signup" component={SignUp} />
+              <Route exact path="/user-detail/:id" component={UserDetail} />
               <Route exact path="/task-detail/:id" component={TaskDetail} />
               <Route exact path="/task-edit/:id" component={TaskEdit} />
               <Route component={NotFound} />

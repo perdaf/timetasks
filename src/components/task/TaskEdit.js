@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import TaskForm from '../components/layout/taskForm/TaskForm';
+import TaskForm from '../layout/taskForm/TaskForm';
 
 import { Redirect } from 'react-router-dom';
 
 import { connect } from 'react-redux';
-import { editTask } from '../store/actions/taskAction';
+import { editTask } from '../../store/actions/taskAction';
 import { firestoreConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
 

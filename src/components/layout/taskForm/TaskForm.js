@@ -59,22 +59,6 @@ const TaskForm = props => {
           <div className="invalid-feedback">{props.errors.deadLine}</div>
         )}
       </div>
-      <div className="form-group text-dark px-4">
-        <label htmlFor="taskDescription">Taux Horaire Journalier</label>
-        <input
-          type="text"
-          autoComplete="Taux Horaire journalier"
-          className="form-control"
-          name="thj"
-          id="tauxHoraireJournalier"
-          onChange={props.handleOnChange}
-          placeholder="Entrer votre taux horaire journalier..."
-          defaultValue={props.valueThj}
-        />
-        {props.errors.desc && (
-          <div className="invalid-feedback">{props.errors.desc}</div>
-        )}
-      </div>
       <div className="form-group d-flex justify-content-center">
         <input
           type="submit"

@@ -10,6 +10,7 @@ class SignUp extends Component {
     password: '',
     firstName: '',
     lastName: '',
+    thj: '',
     errors: {},
   };
 
@@ -23,7 +24,7 @@ class SignUp extends Component {
 
   handleOnSubmit = e => {
     e.preventDefault();
-    const { email, password, firstName, lastName } = this.state;
+    const { email, password, firstName, lastName, thj } = this.state;
 
     if (email === '') {
       this.setState({ errors: { email: "L'email es requis" } });
@@ -47,12 +48,19 @@ class SignUp extends Component {
       });
       return;
     }
+    if (thj === '') {
+      this.setState({
+        thj: 0,
+      });
+      return;
+    }
 
     let newUser = {
       email,
       password,
       firstName,
       lastName,
+      thj,
     };
     console.log('le nouvel utilisateur es >>>', newUser);
     // add the new task to firestore
@@ -148,6 +156,19 @@ class SignUp extends Component {
                 </div>
               )}
             </div>
+            <div className="form-group text-dark px-4">
+              <label htmlFor="UserPassword">Votre taux horaire journalié</label>
+              <input
+                type="text"
+                autoComplete="User thj"
+                className="form-control"
+                name="thj"
+                id="Userthj"
+                onChange={this.handleOnChange}
+                placeholder="Entrer votre taux horaire journalié..."
+              />
+            </div>
+
             <div
               className="text-center mb-3"
               style={{ color: 'red', fontSize: '2rem' }}
