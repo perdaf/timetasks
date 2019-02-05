@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import TaskListe from '../components/task/TaskListe';
 import UserListe from '../components/user/UserListe';
+import ProjectListe from '../components/project/ProjectListe';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 import './home.scss';
@@ -34,7 +35,7 @@ class Home extends Component {
         <div>
           <div className="row">
             <div className="col-sm">
-              <div className="card card text-dark mt-2">
+              <div className="card text-dark mt-2">
                 <div className="card-header d-flex justify-content-between">
                   <h4 className="font-weight-bold">Liste des utilisateurs</h4>
                   <button
@@ -74,7 +75,7 @@ class Home extends Component {
             </div>
           </div>
           <div className="row">
-            <div className="col-sm">
+            <div className="col-sm-6">
               <div className="card card text-dark mt-2">
                 <div className="card-header d-flex justify-content-between">
                   <h4 className="font-weight-bold">Liste des taches</h4>
@@ -93,14 +94,14 @@ class Home extends Component {
                     cardNotDeploy: !this.state.listeTachesIsDeploy,
                   })}
                 >
-                  <div className="row p-1">
-                    <div className="col-lg-8">
+                  <div className="row">
+                    <div className="col-sm-7 d-flex justify-content-start align-items-end">
                       <h5 className="mb-1 font-weight-bold">Nom</h5>
                     </div>
-                    <div className="col-lg text-lg-center">
+                    <div className="col-sm-3 d-flex justify-content-center align-items-end">
                       <h5 className="font-weight-bold">THJ (Euro)</h5>
                     </div>
-                    <div className="col-lg-2 text-lg-center">
+                    <div className="col-sm-2 d-flex justify-content-center align-items-end">
                       <h5 className="font-weight-bold">Temp passé</h5>
                     </div>
                   </div>
@@ -110,7 +111,7 @@ class Home extends Component {
                 </div>
               </div>
             </div>
-            <div className="col-sm-4">
+            <div className="col-sm-6">
               <div className="card card text-dark mt-2">
                 <div className="card-header d-flex justify-content-between">
                   <h4 className="font-weight-bold">Liste des projets</h4>
@@ -130,15 +131,18 @@ class Home extends Component {
                   })}
                 >
                   <div className="row p-1">
-                    <div className="col-lg-8">
+                    <div className="col-lg-4">
                       <h5 className="mb-1 font-weight-bold">Nom</h5>
                     </div>
-                    <div className="col-lg text-lg-center">
+                    <div className="col-lg-4">
+                      <h5 className="mb-1 font-weight-bold">desc</h5>
+                    </div>
+                    <div className="col-lg-4 text-lg-center">
                       <h5 className="font-weight-bold">deadLine</h5>
                     </div>
                   </div>
                   <div className="list-group">
-                    {/* <TaskListe creator={creator} role={user.role} /> */}
+                    {<ProjectListe role={user.role} />}
                   </div>
                 </div>
               </div>

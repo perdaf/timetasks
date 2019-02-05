@@ -10,7 +10,7 @@ import TaskDetail from '../components/task/TaskDetail';
 import TaskEdit from '../components/task/TaskEdit';
 import SignIn from '../pages/auth/SignIn';
 import SignUp from '../pages/auth/SignUp';
-import AddProject from '../pages/AddProject';
+import AddProject from './project/AddProject';
 import UserDetail from './user/UserDetail';
 
 class App extends Component {
@@ -22,14 +22,14 @@ class App extends Component {
           <div className="container">
             <Switch>
               <Route exact path="/" component={Home} />
-              <Route exact path="/add-task" component={AddTask} />
-              <Route exact path="/add-project" component={AddProject} />
-              <Route exact path="/about" component={About} />
-              <Route exact path="/signin" component={SignIn} />
-              <Route exact path="/signup" component={SignUp} />
-              <Route exact path="/user-detail/:id" component={UserDetail} />
-              <Route exact path="/task-detail/:id" component={TaskDetail} />
-              <Route exact path="/task-edit/:id" component={TaskEdit} />
+              <Route path="/add-task" component={AddTask} />
+              <Route path="/add-project" component={AddProject} />
+              <Route path="/about" component={About} />
+              <Route path="/signin" component={SignIn} />
+              <Route path="/signup" component={SignUp} />
+              <Route path="/user-detail/:id" component={UserDetail} />
+              <Route path="/task-detail/:id" component={TaskDetail} />
+              <Route path="/task-edit/:id" component={TaskEdit} />
               <Route component={NotFound} />
             </Switch>
           </div>

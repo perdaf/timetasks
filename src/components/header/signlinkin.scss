@@ -4,10 +4,12 @@ button {
   color: #fff;
   background: none;
   border: none;
+  cursor: pointer;
+
   &:hover {
     background: none;
     border: none;
-    color: $gray-400;
+    color: $gray-400 !important;
   }
   &:focus {
     outline: none;
@@ -22,4 +24,20 @@ button {
 }
 .dropdown-item.active {
   background: none;
+}
+
+.pastille {
+  display: inlinBlock;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  position: relative;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  line-height: 40px;
+  text-align: center;
+  font-size: 1.5rem;
+  top: -5px;
+  text-transform: uppercase;
 }

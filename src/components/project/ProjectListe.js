@@ -9,11 +9,11 @@ import { connect } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
 
-const TaskListe = props => {
-  const { task, user } = props;
+const ProjectListe = props => {
+  const { user, project } = props;
 
-  const userName = taskCreator => {
-    const usercreator = user.filter(user => user.id === taskCreator);
+  const userName = projCreator => {
+    const usercreator = user.filter(user => user.id === projCreator);
     // console.log('USERCREATOR >>>', usercreator);
     if (usercreator.length > 0) {
       return usercreator[0].lastName + ' ' + usercreator[0].firstName;
@@ -22,15 +22,15 @@ const TaskListe = props => {
     }
   };
 
-  if (task.length > 0) {
-    return task.map((item, index) => (
+  if (project.length > 0) {
+    return project.map((item, index) => (
       <Link
-        to={`/task-detail/${item.id}`}
+        to={`/project-detail/${item.id}`}
         className="list-group-item list-group-item-action mb-2"
         key={index}
       >
         <div className="row">
-          <div className="col-sm-7 align-items-end">
+          <div className="col-sm-4 align-items-end">
             <h5 className="mb-1 font-weight-bold text-truncate">{item.name}</h5>
             {props.role === 'admin' && (
               <small>
@@ -38,15 +38,11 @@ const TaskListe = props => {
               </small>
             )}
           </div>
-          <div className="col-sm-3 border-right border-left d-flex align-items-center justify-content-center">
-            <h6>{item.thj} &euro;</h6>
+          <div className="col-sm-4 border-right border-left d-flex align-items-center justify-content-center">
+            <h6>{item.desc}</h6>
           </div>
-          <div className="col-sm-2 d-flex align-items-center justify-content-center">
-            <h6>
-              {moment
-                .duration(item.elapsTime, 'milliseconds')
-                .format('hh:mm:ss', { trim: false })}
-            </h6>
+          <div className="col-sm-3 d-flex align-items-center justify-content-center">
+            <h6>{moment(item.deadLine).format('DD-MM-YYYY')}</h6>
           </div>
         </div>
       </Link>
@@ -54,7 +50,7 @@ const TaskListe = props => {
   } else {
     return (
       <div>
-        <h2 className="text-dark text-center">Aucune tache</h2>
+        <h2 className="text-dark text-center">Aucun projets</h2>
       </div>
     );
   }
@@ -62,22 +58,12 @@ const TaskListe = props => {
 
 const mapStateToProps = (state, ownProps) => {
   // console.log('STATE >>>', state);
-  const role = ownProps.role;
-  const userUid = ownProps.creator;
-  const tasks = state.firestore.ordered.Tasks;
   const users = state.firestore.ordered.users;
+  const projects = state.firestore.ordered.Project;
 
-  // filter result firestore Tasks whith the user auth name
   return {
-    task: tasks
-      ? tasks.filter(task => {
-          if (role === 'admin') {
-            return task;
-          } else {
-            return task.createdBy === userUid;
-          }
-        })
-      : [],
+    project: projects ? projects : [],
+    task: state.firestore.ordered.Tasks,
     auth: state.firebase.auth,
     user: users ? users : [],
   };
@@ -88,5 +74,6 @@ export default compose(
   firestoreConnect([
     { collection: 'Tasks', orderBy: ['createdAt', 'desc'] },
     { collection: 'users', orderBy: ['lastName', 'desc'] },
+    { collection: 'Project', orderBy: ['createdAt', 'desc'] },
   ])
-)(TaskListe);
+)(ProjectListe);

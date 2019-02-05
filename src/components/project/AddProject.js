@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 
 import { connect } from 'react-redux';
-import { createTask } from '../store/actions/taskAction';
+import ProjectForm from './ProjectForm';
+import { createProject } from '../../store/actions/projectAction';
 
 class AddProject extends Component {
   constructor(props) {
@@ -13,8 +14,8 @@ class AddProject extends Component {
       name: '',
       desc: '',
       deadLine: '',
-      thj: 0,
-      elapsTime: 0,
+      budget: '',
+      cout: 0,
       errors: {},
     };
   }
@@ -28,16 +29,16 @@ class AddProject extends Component {
 
   handleOnSubmit = e => {
     e.preventDefault();
-    const { name, desc, thj, elapsTime, deadLine } = this.state;
-    const { user } = this.props;
+    const { name, desc, deadLine, budget, cout } = this.state;
+    const { auth } = this.props;
 
     if (name === '') {
-      this.setState({ errors: { name: 'Le nom de la tache es requis' } });
+      this.setState({ errors: { name: 'Le nom du projet es requis' } });
       return;
     }
     if (desc === '') {
       this.setState({
-        errors: { desc: 'La description de la tache es requise' },
+        errors: { desc: 'La description du projet es requise' },
       });
       return;
     }
@@ -47,26 +48,36 @@ class AddProject extends Component {
       });
       return;
     }
+    if (budget === '') {
+      this.setState({
+        errors: { budget: 'Le budget es requis' },
+      });
+      return;
+    }
 
-    const userName = user.lastName + ' ' + user.firstName;
-    let newtask = {
+    let newProject = {
       name,
       desc,
+      createdAt: new Date(),
       deadLine,
-      thj,
-      elapsTime,
-      createdBy: userName,
+      budget,
+      cout,
+      tasks: {},
+      createdBy: auth.uid,
     };
+
+    console.log('newProject >>>', newProject);
+
     // add the new task to firestore
-    this.props.onAddTask(newtask);
+    this.props.onAddProject(newProject);
 
     // clear the state
     this.setState({
       name: '',
       desc: '',
       deadLine: '',
-      thj: 0,
-      elapsTime: 0,
+      budget: '',
+      cout: 0,
       errors: {},
     });
     this.props.history.push(`/`);
@@ -74,8 +85,8 @@ class AddProject extends Component {
 
   render() {
     // redirect to signin in not connected
-    const { auth } = this.props;
-    if (!auth.uid) return <Redirect to="/signin" />;
+    const { auth, user } = this.props;
+    if (!auth.uid || user.role !== 'admin') return <Redirect to="/" />;
     return (
       <div>
         <div className="card text-dark">
@@ -83,12 +94,11 @@ class AddProject extends Component {
             + ajouter un projet
           </div>
           <div className="card-body " />
-          <h1>Add project</h1>
-          {/* <TaskForm
+          <ProjectForm
             handleOnChange={this.handleOnChange}
             handleOnSubmit={this.handleOnSubmit}
             errors={this.state.errors}
-          /> */}
+          />
         </div>
       </div>
     );
@@ -104,7 +114,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onAddTask: task => dispatch(createTask(task)),
+    onAddProject: proj => dispatch(createProject(proj)),
   };
 };
 

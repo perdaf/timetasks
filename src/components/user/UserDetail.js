@@ -7,7 +7,7 @@ import * as $ from 'jquery';
 import Modal from '../layout/modal/Modal';
 
 import { connect } from 'react-redux';
-import { editUser } from '../../store/actions/userAction';
+import { editUser, deleteUser } from '../../store/actions/userAction';
 import { firestoreConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
 
@@ -127,7 +127,7 @@ class UserDetail extends Component {
     $('.ModalBtnConfirm')
       .off('click')
       .click(() => {
-        // this.props.onDeleteTask(id);
+        this.props.onDeleteUser(id);
         $('#ConfirmDelete').modal('hide');
         this.props.history.push(`/`);
       });
@@ -169,6 +169,23 @@ class UserDetail extends Component {
                 <option value="admin">admin</option>
               </select>
             </div>
+          );
+        }
+      }
+    };
+
+    const renderDeleteBtn = () => {
+      if (isAdmin()) {
+        if (user.id === auth.uid) {
+          return null;
+        } else {
+          return (
+            <input
+              type="button"
+              className="btn btn-danger mb-3 mx-3"
+              value="Supprimer"
+              onClick={() => this.toggleModalSuppUser(this.state.id)}
+            />
           );
         }
       }
@@ -251,14 +268,7 @@ class UserDetail extends Component {
                     value="Enregistrer"
                     className="btn btn-primary mb-3 mr-3"
                   />
-                  {isAdmin() && (
-                    <input
-                      type="button"
-                      className="btn btn-danger mb-3 mx-3"
-                      value="Supprimer"
-                      onClick={() => this.toggleModalSuppUser(this.state.id)}
-                    />
-                  )}
+                  {renderDeleteBtn()}
 
                   <input
                     type="button"
@@ -299,7 +309,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    // onDeleteUser: id => dispatch(deleteUser(id)),
+    onDeleteUser: id => dispatch(deleteUser(id)),
     onUpdateUser: (id, user) => dispatch(editUser(id, user)),
   };
 };

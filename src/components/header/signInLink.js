@@ -8,6 +8,51 @@ import { signOut } from '../../store/actions/authAction';
 
 const SignInLink = props => {
   const { user, auth } = props;
+
+  const projectTaskByRole = () => {
+    if (user.role === 'admin') {
+      return (
+        <li className="nav-item dropdown">
+          <button
+            className="nav-link dropdown-toggle"
+            data-toggle="dropdown"
+            href="#"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            Project/task
+          </button>
+          <div className="dropdown-menu bg-dark">
+            <NavLink to="/add-project" className="dropdown-item text-light">
+              <i className="fas fa-plus" /> Add Project
+            </NavLink>
+            <NavLink to="/add-task" className="dropdown-item text-light">
+              <i className="fas fa-plus" /> Add Task
+            </NavLink>
+          </div>
+        </li>
+      );
+    } else {
+      return (
+        <li className="nav-item dropdown">
+          <button
+            className="nav-link dropdown-toggle"
+            data-toggle="dropdown"
+            href="#"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            task
+          </button>
+          <div className="dropdown-menu bg-dark">
+            <NavLink to="/add-task" className="dropdown-item text-light">
+              <i className="fas fa-plus" /> Add Task
+            </NavLink>
+          </div>
+        </li>
+      );
+    }
+  };
   return (
     <React.Fragment>
       <li className="nav-item">
@@ -15,57 +60,26 @@ const SignInLink = props => {
           <i className="fas fa-home" /> Home
         </NavLink>
       </li>
-      <li className="nav-item dropdown">
-        <button
-          className="nav-link dropdown-toggle"
-          data-toggle="dropdown"
-          href="#"
-          // role="button"
-          aria-haspopup="true"
-          aria-expanded="false"
-        >
-          Project/task
-        </button>
-        <div className="dropdown-menu bg-dark">
-          <NavLink to="/add-project" className="dropdown-item text-light">
-            <i className="fas fa-plus" /> Add Project
-          </NavLink>
-          <NavLink to="/add-task" className="dropdown-item text-light">
-            <i className="fas fa-plus" /> Add Task
-          </NavLink>
-        </div>
-      </li>
+      {projectTaskByRole()}
       <li className="nav-item">
         <NavLink to="/about" className="nav-link text-light">
           About
         </NavLink>
       </li>
-      <li className="nav-item">
-        <a href="#/" className="nav-link text-light" onClick={props.onLogOut}>
-          Logout
-        </a>
-      </li>
+
       <li className="nav-item">
         <NavLink
           to={`/user-detail/${auth.uid}`}
-          className="nav-link text-light font-weight-bold bg-primary rounded-circle"
-          style={{
-            display: 'inlinBlock',
-            margin: '0',
-            padding: '0',
-            boxSizing: 'border-box',
-            position: 'relative',
-            width: '45px',
-            height: '45px',
-            lineHeight: '40px',
-            textAlign: 'center',
-            fontSize: '1.5rem',
-            top: '-5px',
-            textTransform: 'uppercase',
-          }}
+          className="nav-link text-light font-weight-bold bg-primary pastille"
         >
           {user.initials}
         </NavLink>
+      </li>
+
+      <li className="nav-item">
+        <button className="nav-link text-light" onClick={props.onLogOut}>
+          Logout
+        </button>
       </li>
     </React.Fragment>
   );

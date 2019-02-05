@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import TaskForm from '../components/layout/taskForm/TaskForm';
+import TaskForm from '../components/task/TaskForm';
 
 import { Redirect } from 'react-router-dom';
 

@@ -27,6 +27,7 @@ const store = createStore(
       userProfile: 'users',
       attachAuthIsReady: true,
     }),
+    // -- devTool --
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
   )
 );
