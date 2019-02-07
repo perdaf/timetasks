@@ -1,0 +1,23 @@
+@import '../../scss/variables';
+
+.sidenav {
+  height: 100%; /* 100% Full-height */
+  width: 180px; /* 0 width - change this with JavaScript */
+  position: relative; /* Stay in place */
+  z-index: 1; /* Stay on top */
+  top: 0; /* Stay at the top */
+  left: 0;
+  background-color: $gray-800;
+  overflow-x: hidden; /* Disable horizontal scroll */
+  padding-top: 25px; /* Place content 60px from the top */
+  transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+
+  .nav-link {
+    font-size: 1.2rem;
+    color: #fff;
+
+    &:hover {
+      color: $light-orange;
+    }
+  }
+}

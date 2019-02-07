@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { Link, Redirect } from 'react-router-dom';
+import './task.scss';
+
+import classnames from 'classnames';
 
 import moment from 'moment';
 import 'moment-duration-format';
@@ -38,8 +41,8 @@ class TaskDetail extends Component {
     // redirect to signin in not connected
     const { auth, user } = this.props;
 
-    const userName = taskCreator => {
-      const usercreator = user.filter(user => user.id === taskCreator);
+    const userName = id => {
+      const usercreator = user.filter(user => user.id === id);
       // console.log('USERCREATOR >>>', usercreator);
       if (usercreator.length > 0) {
         return usercreator[0].lastName + ' ' + usercreator[0].firstName;
@@ -53,12 +56,29 @@ class TaskDetail extends Component {
       const {
         name,
         desc,
+        etat,
         thj,
+        dev,
         elapsTime,
         createdAt,
         deadLine,
         createdBy,
       } = this.props.task;
+
+      // for styling etat
+      const colorByEtat = etat => {
+        switch (etat) {
+          case 'fait':
+            return 1;
+          case 'en cour':
+            return 2;
+          case 'controle qualite':
+            return 3;
+          default:
+            return null;
+        }
+      };
+
       return (
         <div>
           <Modal
@@ -74,6 +94,18 @@ class TaskDetail extends Component {
                 {name}
               </h4>
               <small>Created by {userName(createdBy)}</small>
+              <div className="row mt-2">
+                <div className="col">
+                  <h5 className="text-center">
+                    <u>Développeur assigné a la tache:</u>
+                  </h5>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col text-center font-weight-bold">
+                  <div className="col-sm">{userName(dev)}</div>
+                </div>
+              </div>
             </div>
             <div className="card-body">
               <div className="row">
@@ -105,12 +137,37 @@ class TaskDetail extends Component {
                           <h5 className="font-weight-bold">Date de fin :</h5>
                         </div>
                         <div className="col-sm">
-                          {(deadLine &&
-                            moment(deadLine).format('DD/MM/YYYY')) ||
-                            '--'}
+                          Dans{' '}
+                          <b>
+                            {(deadLine &&
+                              moment
+                                .duration(moment(deadLine).diff(moment()))
+                                .format('d [jour(s)]')) ||
+                              '--'}{' '}
+                          </b>
                         </div>
                       </div>
                     </li>
+                    <li
+                      className={classnames('list-group-item', {
+                        done: colorByEtat(etat) === 1,
+                        'en-cour': colorByEtat(etat) === 2,
+                        'controle-qualite': colorByEtat(etat) === 3,
+                      })}
+                    >
+                      <div className="row">
+                        <div className="col-sm-4">
+                          <h5 className="font-weight-bold">Etat:</h5>
+                        </div>
+                        <div
+                          className="col-sm font-weight-bold"
+                          style={{ fontSize: '1.2rem' }}
+                        >
+                          {etat ? etat : 'non renseigner'}
+                        </div>
+                      </div>
+                    </li>
+
                     <li className="list-group-item">
                       <div className="row">
                         <div className="col-sm-4">

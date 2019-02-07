@@ -16,6 +16,8 @@ class TaskEdit extends Component {
       name: '',
       desc: '',
       deadLine: '',
+      etat: '',
+      dev: '',
       thj: '',
       errors: {},
     };
@@ -32,25 +34,15 @@ class TaskEdit extends Component {
   componentDidUpdate(oldProps) {
     const newProps = this.props;
     if (oldProps.task !== newProps.task) {
-      this.setState(
-        {
-          ...newProps.task,
-        },
-        () => {
-          console.log('Update > mise a jour des state >>> ', this.state);
-        }
-      );
+      this.setState({
+        ...newProps.task,
+      });
     }
   }
   componentDidMount() {
-    this.setState(
-      {
-        ...this.props.task,
-      },
-      () => {
-        console.log('Mount > mise a jour des state >>> ', this.state);
-      }
-    );
+    this.setState({
+      ...this.props.task,
+    });
   }
 
   handleOnChange = e => {
@@ -70,7 +62,7 @@ class TaskEdit extends Component {
     e.preventDefault();
     console.log('Submit >>>', this.state);
 
-    const { name, desc, deadLine, thj } = this.state;
+    const { name, desc, deadLine, etat, thj, dev } = this.state;
     const id = this.props.match.params.id;
 
     if (name === '') {
@@ -89,12 +81,26 @@ class TaskEdit extends Component {
       });
       return;
     }
+    if (etat === '') {
+      this.setState({
+        etat: 'en cour',
+      });
+      return;
+    }
+    if (dev === '') {
+      this.setState({
+        errors: { dev: 'Le dev assigné es requise' },
+      });
+      return;
+    }
 
     let newtask = {
       name,
       desc,
       deadLine,
+      etat,
       thj,
+      dev,
     };
 
     // add the new task to firestore
@@ -105,6 +111,7 @@ class TaskEdit extends Component {
       name: '',
       desc: '',
       deadLine: '',
+      etat: '',
       thj: '',
       errors: {},
     });
@@ -113,10 +120,24 @@ class TaskEdit extends Component {
 
   render() {
     // redirect to signin in not connected
-    const { auth } = this.props;
+    const { auth, thisUser, users } = this.props;
+
     if (!auth.uid) return <Redirect to="/signin" />;
+    const dev = users.map(item => {
+      return {
+        name: item.lastName,
+        prenom: item.firstName,
+        id: item.id,
+      };
+    });
+    console.log('THISUSER >>>', thisUser);
+    let isAdmin = false;
+    if (thisUser.role === 'admin') {
+      isAdmin = true;
+    }
+
     if (this.props.task) {
-      const { name, desc, thj, deadLine } = this.props.task;
+      const { name, desc, thj, deadLine, etat } = this.props.task;
       return (
         <div>
           <div className="card">
@@ -134,7 +155,10 @@ class TaskEdit extends Component {
               valueDesc={desc}
               valueThj={thj}
               valueDeadLine={deadLine}
+              valueEtat={etat}
               errors={this.state.errors}
+              isAdmin={isAdmin}
+              dev={dev}
             />
           </div>
         </div>
@@ -157,9 +181,14 @@ const mapStateToProps = (state, ownProps) => {
   const id = ownProps.match.params.id;
   const tasks = state.firestore.data.Tasks;
   const task = tasks ? tasks[id] : null;
+  const users = state.firestore.ordered.users;
+  const thisUser = state.firebase.profile;
+
   return {
     task: task,
     auth: state.firebase.auth,
+    users: users ? users : [],
+    thisUser: thisUser ? thisUser : [],
   };
 };
 
@@ -175,5 +204,8 @@ export default compose(
     mapStateToProps,
     mapDispatchToProps
   ),
-  firestoreConnect([{ collection: 'Tasks' }])
+  firestoreConnect([
+    { collection: 'Tasks' },
+    { collection: 'users', orderBy: ['lastName', 'desc'] },
+  ])
 )(TaskEdit);

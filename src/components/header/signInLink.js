@@ -85,7 +85,7 @@ const SignInLink = props => {
   );
 };
 const mapStateToProps = state => {
-  console.log('header > State >>>', state);
+  // console.log('header > State >>>', state);
   return {
     user: state.firebase.profile,
     auth: state.firebase.auth,

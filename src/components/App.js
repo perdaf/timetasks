@@ -5,33 +5,49 @@ import Home from '../pages/Home';
 import About from '../pages/About';
 import Header from './header/header';
 import NotFound from '../pages/NotFound';
-import AddTask from '../pages/AddTask';
+import AddTask from './task/AddTask';
 import TaskDetail from '../components/task/TaskDetail';
 import TaskEdit from '../components/task/TaskEdit';
 import SignIn from '../pages/auth/SignIn';
 import SignUp from '../pages/auth/SignUp';
 import AddProject from './project/AddProject';
 import UserDetail from './user/UserDetail';
+import SideNav from './sidenav/SideNav';
+import UsersPage from '../pages/UsersPage';
+import TasksPage from '../pages/TasksPage';
+import ProjectsPage from '../pages/ProjectsPage';
+import Footer from '../components/footer/footer';
 
 class App extends Component {
   render() {
     return (
       <Router>
-        <div className="App">
+        <div>
           <Header />
-          <div className="container">
-            <Switch>
-              <Route exact path="/" component={Home} />
-              <Route path="/add-task" component={AddTask} />
-              <Route path="/add-project" component={AddProject} />
-              <Route path="/about" component={About} />
-              <Route path="/signin" component={SignIn} />
-              <Route path="/signup" component={SignUp} />
-              <Route path="/user-detail/:id" component={UserDetail} />
-              <Route path="/task-detail/:id" component={TaskDetail} />
-              <Route path="/task-edit/:id" component={TaskEdit} />
-              <Route component={NotFound} />
-            </Switch>
+          <div className="content">
+            <SideNav />
+            <div className="main">
+              <div className="container">
+                <Switch>
+                  <Route exact path="/" component={Home} />
+                  <Route path="/add-task" component={AddTask} />
+                  <Route path="/add-project" component={AddProject} />
+                  <Route path="/projects-page" component={ProjectsPage} />
+                  <Route path="/about" component={About} />
+                  <Route path="/signin" component={SignIn} />
+                  <Route path="/signup" component={SignUp} />
+                  <Route path="/user-detail/:id" component={UserDetail} />
+                  <Route path="/users-page" component={UsersPage} />
+                  <Route path="/task-detail/:id" component={TaskDetail} />
+                  <Route path="/task-edit/:id" component={TaskEdit} />
+                  <Route path="/tasks-page" component={TasksPage} />
+                  <Route component={NotFound} />
+                </Switch>
+              </div>
+            </div>
+          </div>
+          <div className="footer">
+            <Footer />
           </div>
         </div>
       </Router>

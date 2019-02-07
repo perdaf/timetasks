@@ -30,7 +30,7 @@ const ProjectListe = props => {
         key={index}
       >
         <div className="row">
-          <div className="col-sm-4 align-items-end">
+          <div className="col-sm-4">
             <h5 className="mb-1 font-weight-bold text-truncate">{item.name}</h5>
             {props.role === 'admin' && (
               <small>
@@ -41,7 +41,7 @@ const ProjectListe = props => {
           <div className="col-sm-4 border-right border-left d-flex align-items-center justify-content-center">
             <h6>{item.desc}</h6>
           </div>
-          <div className="col-sm-3 d-flex align-items-center justify-content-center">
+          <div className="col-sm-4 d-flex align-items-center justify-content-center">
             <h6>{moment(item.deadLine).format('DD-MM-YYYY')}</h6>
           </div>
         </div>

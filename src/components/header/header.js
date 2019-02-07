@@ -1,5 +1,6 @@
 import React from 'react';
 import logo from '../../logo-white.png';
+import './header.scss';
 
 import SignInLink from './signInLink';
 import SignOutLink from './signOutLink';
@@ -8,19 +9,20 @@ import { connect } from 'react-redux';
 
 const Header = props => {
   const { auth } = props;
+  // if auth affiche les liens adequat
   const link = auth.uid ? <SignInLink /> : <SignOutLink />;
   return (
-    <nav className="navbar navbar-expand-sm navbar-dark bg-dark mb-3 py-2">
-      <div className="container">
+    <nav className="top-nav d-flex justify-content-between align-items-center">
+      <div className="logo">
         <img
           src={logo}
           alt={logo}
           className="logo"
           style={{ height: '70px' }}
         />
-        <div>
-          <ul className="nav-bar nav mr-auto">{link}</ul>
-        </div>
+      </div>
+      <div className="top-menu">
+        <ul className="navbar nav mr-auto">{link}</ul>
       </div>
     </nav>
   );

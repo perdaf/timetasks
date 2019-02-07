@@ -1,0 +1,15 @@
+@import '../../scss/variables';
+
+// ------- taskDetail -----------
+.done {
+  color: #fff;
+  background-color: $green;
+}
+.en-cour {
+  color: #fff;
+  background-color: $dark-orange;
+}
+.controle-qualite {
+  color: #fff;
+  background-color: $light-orange;
+}
