@@ -25,7 +25,7 @@ const SideNav = () => {
           </li>
         </ul>
 
-        <h6 className="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+        {/* <h6 className="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
           <span>Saved reports</span>
           <NavLink className="d-flex align-items-center text-muted" to="#" />
         </h6>
@@ -40,7 +40,7 @@ const SideNav = () => {
               Orders
             </NavLink>
           </li>
-        </ul>
+        </ul> */}
       </div>
     </nav>
   );

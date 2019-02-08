@@ -17,6 +17,7 @@ import UsersPage from '../pages/UsersPage';
 import TasksPage from '../pages/TasksPage';
 import ProjectsPage from '../pages/ProjectsPage';
 import Footer from '../components/footer/footer';
+import projectDetail from './project/projectDetail';
 
 class App extends Component {
   render() {
@@ -33,6 +34,7 @@ class App extends Component {
                   <Route path="/add-task" component={AddTask} />
                   <Route path="/add-project" component={AddProject} />
                   <Route path="/projects-page" component={ProjectsPage} />
+                  <Route path="/project-detail/:id" component={projectDetail} />
                   <Route path="/about" component={About} />
                   <Route path="/signin" component={SignIn} />
                   <Route path="/signup" component={SignUp} />

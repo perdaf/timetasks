@@ -53,14 +53,13 @@ class TaskEdit extends Component {
         [name]: value,
       },
       () => {
-        console.log('state after onChange >>> ', this.state);
+        // console.log('state after onChange >>> ', this.state);
       }
     );
   };
 
   handleOnSubmit = e => {
     e.preventDefault();
-    console.log('Submit >>>', this.state);
 
     const { name, desc, deadLine, etat, thj, dev } = this.state;
     const id = this.props.match.params.id;
@@ -128,9 +127,10 @@ class TaskEdit extends Component {
         name: item.lastName,
         prenom: item.firstName,
         id: item.id,
+        thj: item.thj,
       };
     });
-    console.log('THISUSER >>>', thisUser);
+    // console.log('THISUSER >>>', thisUser);
     let isAdmin = false;
     if (thisUser.role === 'admin') {
       isAdmin = true;

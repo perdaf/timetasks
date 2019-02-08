@@ -13,6 +13,7 @@ class AddTask extends Component {
     super(props);
 
     this.state = {
+      projet: '',
       name: '',
       desc: '',
       deadLine: '',
@@ -32,9 +33,15 @@ class AddTask extends Component {
 
   handleOnSubmit = e => {
     e.preventDefault();
-    const { name, desc, deadLine, dev } = this.state;
+    const { name, desc, deadLine, dev, projet } = this.state;
     const { auth, thisUser, users } = this.props;
 
+    if (projet === '') {
+      this.setState({
+        errors: { projet: 'Le projet assigner à la tache es requis' },
+      });
+      return;
+    }
     if (name === '') {
       this.setState({ errors: { name: 'Le nom de la tache es requis' } });
       return;
@@ -69,6 +76,7 @@ class AddTask extends Component {
     if (dev !== auth.uid) {
       getUser(dev).then(x => {
         let newtask = {
+          projet,
           name,
           desc,
           deadLine,
@@ -78,13 +86,14 @@ class AddTask extends Component {
           etat: 'en cour',
           createdBy: auth.uid,
         };
-        console.log('NewTask >>>', newtask);
+        // console.log('NewTask >>>', newtask);
         // add the new task to firestore
         this.props.onAddTask(newtask);
         this.props.history.push(`/`);
       });
     } else {
       let newtask = {
+        projet,
         name,
         desc,
         deadLine,
@@ -94,7 +103,7 @@ class AddTask extends Component {
         etat: 'en cour',
         createdBy: auth.uid,
       };
-      console.log('NewTask >>>', newtask);
+      // console.log('NewTask >>>', newtask);
       // add the new task to firestore
       this.props.onAddTask(newtask);
       this.props.history.push(`/`);
@@ -102,6 +111,7 @@ class AddTask extends Component {
 
     // clear the state
     this.setState({
+      projet: '',
       name: '',
       desc: '',
       deadLine: '',
@@ -115,8 +125,10 @@ class AddTask extends Component {
 
   render() {
     // redirect to signin in not connected
-    const { auth, users, thisUser } = this.props;
+    const { auth, users, thisUser, projects } = this.props;
+    if (!auth.uid) return <Redirect to="/signin" />;
 
+    // liste des users => dev pour affichage
     const dev = users.map(item => {
       return {
         name: item.lastName,
@@ -126,7 +138,14 @@ class AddTask extends Component {
       };
     });
 
-    if (!auth.uid) return <Redirect to="/signin" />;
+    const projectsArr = projects.map(item => {
+      return {
+        name: item.name,
+        id: item.id,
+      };
+    });
+
+    // console.log('projectsArr >>>', projectsArr);
 
     let isAdmin = false;
     if (thisUser.role === 'admin') {
@@ -147,6 +166,7 @@ class AddTask extends Component {
             dev={dev}
             crea={true}
             isAdmin={isAdmin}
+            projects={projectsArr}
           />
         </div>
       </div>
@@ -157,10 +177,12 @@ class AddTask extends Component {
 const mapStateToProps = state => {
   const thisUser = state.firebase.profile;
   const users = state.firestore.ordered.users;
+  const projects = state.firestore.ordered.Project;
   return {
     auth: state.firebase.auth,
     thisUser: thisUser ? thisUser : null,
     users: users ? users : [],
+    projects: projects ? projects : [],
   };
 };
 
@@ -178,5 +200,6 @@ export default compose(
   firestoreConnect([
     { collection: 'Tasks', orderBy: ['createdAt', 'desc'] },
     { collection: 'users', orderBy: ['lastName', 'desc'] },
+    { collection: 'Project', orderBy: ['createdAt', 'desc'] },
   ])
 )(AddTask);

@@ -39,13 +39,16 @@ export const signUp = newUser => {
         return firestore
           .collection('users')
           .doc(res.user.uid)
-          .set({
-            firstName: newUser.firstName,
-            lastName: newUser.lastName,
-            initials: newUser.lastName[0] + newUser.firstName[0],
-            thj: newUser.thj,
-            role: 'user',
-          })
+          .set(
+            {
+              firstName: newUser.firstName,
+              lastName: newUser.lastName,
+              initials: newUser.lastName[0] + newUser.firstName[0],
+              thj: newUser.thj,
+              role: 'user',
+            },
+            { merge: true }
+          )
           .then(() => {
             dispatch({ type: 'SIGNUP_SUCCESS' });
           });

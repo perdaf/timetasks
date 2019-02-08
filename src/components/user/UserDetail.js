@@ -36,7 +36,7 @@ class UserDetail extends Component {
           },
         },
         () => {
-          console.log('Update > mise a jour des state >>> ', this.state);
+          // console.log('Update > mise a jour des state >>> ', this.state);
         }
       );
     }
@@ -49,7 +49,7 @@ class UserDetail extends Component {
         },
       },
       () => {
-        console.log('Mount > mise a jour des state >>> ', this.state);
+        // console.log('Mount > mise a jour des state >>> ', this.state);
       }
     );
   }
@@ -65,7 +65,7 @@ class UserDetail extends Component {
         },
       },
       () => {
-        console.log('state after onChange >>> ', this.state);
+        // console.log('state after onChange >>> ', this.state);
       }
     );
   };
@@ -102,7 +102,7 @@ class UserDetail extends Component {
       thj,
       role,
     };
-    console.log('utilisateur es >>>', newUser);
+    // console.log('utilisateur es >>>', newUser);
     // add the new task to firestore
     if (this.state.user) {
       this.props.onUpdateUser(this.state.id, newUser);

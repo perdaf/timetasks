@@ -7,8 +7,25 @@ export const createTask = task => {
         ...task,
         createdAt: new Date(),
       })
-      .then(() => {
-        dispatch({ type: 'ADDTASK', task });
+      .then(res => {
+        return firestore
+          .collection('Project')
+          .doc(task.projet)
+          .get()
+          .then(doc => {
+            // get all old tasks
+            let oldTask = doc.data().tasks || [];
+            // add the new task in list
+            oldTask.push({ name: res.id });
+            // set the new tasks array in the nestin tasks
+            return firestore
+              .collection('Project')
+              .doc(task.projet)
+              .set({ tasks: oldTask }, { merge: true })
+              .then(() => {
+                dispatch({ type: 'ADDTASK', task });
+              });
+          });
       })
       .catch(err => {
         console.error(err);
@@ -20,18 +37,61 @@ export const deleteTask = id => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     // async call to db
     const firestore = getFirestore();
+    // get the task
     firestore
       .collection('Tasks')
       .doc(id)
-      .delete()
-      .then(() => {
-        dispatch({ type: 'DELETETASK', id });
+      .get()
+      .then(doc => {
+        // recup le projet auquel la tache es assigné
+        const projet = doc.data().projet || null;
+        console.log('PROJET >>>', projet);
+        if (projet !== null) {
+          return firestore
+            .collection('Project')
+            .doc(projet)
+            .get()
+            .then(proj => {
+              // recup la liste des taches dans le bon projet
+              let tasksArr = proj.data().tasks;
+              // on retourne une liste SANS la tache en question
+              const newtasksArr = tasksArr.filter(task => task.name !== id);
+              // on reecrit la liste des taches modifier dans le tableau des tasks du projet
+              return firestore
+                .collection('Project')
+                .doc(projet)
+                .set({ tasks: newtasksArr }, { merge: true })
+                .then(() => {
+                  // finalement on supprime la tache
+                  return firestore
+                    .collection('Tasks')
+                    .doc(id)
+                    .delete()
+                    .then(() => {
+                      dispatch({ type: 'DELETETASK', id });
+                    })
+                    .catch(err => {
+                      console.error(err);
+                    });
+                });
+            });
+        } else {
+          firestore
+            .collection('Tasks')
+            .doc(id)
+            .delete()
+            .then(() => {
+              dispatch({ type: 'DELETETASK', id });
+            })
+            .catch(err => {
+              console.error(err);
+            });
+        }
       })
-      .catch(err => {
-        console.error(err);
-      });
+      .catch(err => console.error('Somthing gone wrong', err));
   };
 };
+
 export const editTask = (id, task) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     // async call to db

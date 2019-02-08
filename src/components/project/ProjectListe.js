@@ -23,6 +23,7 @@ const ProjectListe = props => {
   };
 
   if (project.length > 0) {
+    // console.log('PROJECT', project);
     return project.map((item, index) => (
       <Link
         to={`/project-detail/${item.id}`}
@@ -63,7 +64,6 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     project: projects ? projects : [],
-    task: state.firestore.ordered.Tasks,
     auth: state.firebase.auth,
     user: users ? users : [],
   };
@@ -72,7 +72,6 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   connect(mapStateToProps),
   firestoreConnect([
-    { collection: 'Tasks', orderBy: ['createdAt', 'desc'] },
     { collection: 'users', orderBy: ['lastName', 'desc'] },
     { collection: 'Project', orderBy: ['createdAt', 'desc'] },
   ])

@@ -3,8 +3,43 @@ import classnames from 'classnames';
 import { withRouter } from 'react-router-dom';
 
 const TaskForm = props => {
+  let adminAndCrea = false;
+  if (props.isAdmin && props.crea) {
+    adminAndCrea = true;
+  }
+
   return (
     <form onSubmit={props.handleOnSubmit}>
+      {props.crea && (
+        <div className="form-group text-dark px-4">
+          <label htmlFor="projet">Projet assigner à la tache :</label>
+          <select
+            type="text"
+            autoComplete="dev assigné"
+            className={classnames('form-control', {
+              'is-invalid': props.errors.projet,
+            })}
+            name="projet"
+            id="projet"
+            onChange={props.handleOnChange}
+            // placeholder="Enter l'etat"
+            // defaultValue={props.valueDev}
+          >
+            <option>---</option>
+            {props.projects.map((item, index) => {
+              return (
+                <option key={index} value={item.id}>
+                  {item.name}
+                </option>
+              );
+            })}
+          </select>
+          {props.errors.projet && (
+            <div className="invalid-feedback">{props.errors.projet}</div>
+          )}
+        </div>
+      )}
+
       <div className="form-group text-dark px-4">
         <label htmlFor="taskName">Task Name</label>
         <input
@@ -43,7 +78,7 @@ const TaskForm = props => {
         )}
       </div>
 
-      {props.isAdmin && (
+      {adminAndCrea && (
         <div className="form-group text-dark px-4">
           <label htmlFor="dev">Developpeur assigner à la tache :</label>
           <select

@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { Link, Redirect } from 'react-router-dom';
-import './task.scss';
 
-import classnames from 'classnames';
+// import classnames from 'classnames';
 
 import moment from 'moment';
 import 'moment-duration-format';
@@ -10,14 +9,13 @@ import 'moment-duration-format';
 import * as $ from 'jquery';
 
 import Modal from '../layout/modal/Modal';
-import Timer from '../timer/Timer';
 
 import { connect } from 'react-redux';
 import { deleteTask } from '../../store/actions/taskAction';
 import { firestoreConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
 
-class TaskDetail extends Component {
+class ProjectDetail extends Component {
   constructor(props) {
     super(props);
 
@@ -31,15 +29,16 @@ class TaskDetail extends Component {
     $('.ModalBtnConfirm')
       .off('click')
       .click(() => {
-        this.props.onDeleteTask(id);
+        // this.props.onDeleteTask(id);
         $('#ConfirmDelete').modal('hide');
-        this.props.history.push(`/`);
+        // this.props.history.push(`/`);
       });
   };
 
   render() {
     // redirect to signin in not connected
-    const { auth, user, projets } = this.props;
+    const { auth, user, projet } = this.props;
+    if (!auth.uid) return <Redirect to="/signin" />;
 
     const userName = id => {
       const usercreator = user.filter(user => user.id === id);
@@ -50,50 +49,46 @@ class TaskDetail extends Component {
         return '--';
       }
     };
-    const projetName = id => {
-      const projet = projets.filter(projet => projet.id === id);
-      if (projet.length > 0) {
-        return projet[0].name;
-      } else {
-        return '--';
-      }
-    };
+    // const projetName = id => {
+    //   const projet = projets.filter(projet => projet.id === id);
+    //   if (projet.length > 0) {
+    //     return projet[0].name;
+    //   } else {
+    //     return '--';
+    //   }
+    // };
 
-    if (!auth.uid) return <Redirect to="/signin" />;
-    if (this.props.task) {
+    if (projet) {
       const {
-        projet,
         name,
         desc,
-        etat,
-        thj,
-        dev,
-        elapsTime,
-        createdAt,
-        deadLine,
+        // etat,
+        budget,
         createdBy,
-      } = this.props.task;
+        deadLine,
+        createdAt,
+      } = projet;
 
       // for styling etat
-      const colorByEtat = etat => {
-        switch (etat) {
-          case 'fait':
-            return 1;
-          case 'en cour':
-            return 2;
-          case 'controle qualite':
-            return 3;
-          default:
-            return null;
-        }
-      };
+      //   const colorByEtat = etat => {
+      //     switch (etat) {
+      //       case 'fait':
+      //         return 1;
+      //       case 'en cour':
+      //         return 2;
+      //       case 'controle qualite':
+      //         return 3;
+      //       default:
+      //         return null;
+      //     }
+      //   };
 
       return (
         <div>
           <Modal
             ModalName="ConfirmDelete"
             ModalTitle="confirme delete"
-            ModalContent="Voulez vous vraiment supprimer cette tache ?"
+            ModalContent="Voulez vous vraiment supprimer ce projet ?"
             ModalBtnLabel="Confime"
           />
 
@@ -103,18 +98,6 @@ class TaskDetail extends Component {
                 {name}
               </h4>
               <small>Created by {userName(createdBy)}</small>
-              <div className="row mt-2">
-                <div className="col">
-                  <h5 className="text-center">
-                    <u>Développeur assigné a la tache:</u>
-                  </h5>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col text-center font-weight-bold">
-                  <div className="col-sm">{userName(dev)}</div>
-                </div>
-              </div>
             </div>
             <div className="card-body">
               <div className="row">
@@ -123,21 +106,12 @@ class TaskDetail extends Component {
                     <li className="list-group-item">
                       <div className="row">
                         <div className="col-sm-4">
-                          <h5 className="font-weight-bold">projet:</h5>
-                        </div>
-                        <div className="col-sm font-weight-bold">
-                          {projetName(projet)}
-                        </div>
-                      </div>
-                    </li>
-                    <li className="list-group-item">
-                      <div className="row">
-                        <div className="col-sm-4">
                           <h5 className="font-weight-bold">Desc:</h5>
                         </div>
                         <div className="col-sm">{desc}</div>
                       </div>
                     </li>
+
                     <li className="list-group-item">
                       <div className="row">
                         <div className="col-sm-4">
@@ -150,6 +124,7 @@ class TaskDetail extends Component {
                         </div>
                       </div>
                     </li>
+
                     <li className="list-group-item">
                       <div className="row">
                         <div className="col-sm-4">
@@ -167,7 +142,8 @@ class TaskDetail extends Component {
                         </div>
                       </div>
                     </li>
-                    <li
+
+                    {/* <li
                       className={classnames('list-group-item', {
                         done: colorByEtat(etat) === 1,
                         'en-cour': colorByEtat(etat) === 2,
@@ -185,39 +161,30 @@ class TaskDetail extends Component {
                           {etat ? etat : 'non renseigner'}
                         </div>
                       </div>
-                    </li>
+                    </li> */}
 
                     <li className="list-group-item">
                       <div className="row">
                         <div className="col-sm-4">
-                          <h5 className="font-weight-bold">THJ:</h5>
+                          <h5 className="font-weight-bold">Budget:</h5>
                         </div>
-                        <div className="col-sm">{thj} &euro;</div>
+                        <div className="col-sm">{budget} &euro;</div>
                       </div>
                     </li>
                   </ul>
                 </div>
                 <div className="col-sm-6 text-center">
-                  <div>
-                    <h4 className="font-weight-bold">
-                      Temp passé sur la tache :{' '}
-                      {moment
-                        .duration(elapsTime, 'milliseconds')
-                        .format('hh:mm:ss', { trim: false })}
-                    </h4>
-                  </div>
-                  <div>
-                    <Timer taskId={this.state.id} taskElapsTime={elapsTime} />
-                  </div>
+                  <h2>Temp total passer sur le projet</h2>
                 </div>
               </div>
               <ul className="list-group list-group-flush">
                 <li className="list-group-item bg-light">
                   <div>
                     <h4 className="font-weight-bold text-center py-3">
-                      Somme Engranger :{' '}
+                      Sommes investies :
+                      {/* {' '}
                       {Math.round((thj / 7) * (elapsTime / 1000 / 60 / 60))}{' '}
-                      &euro;
+                      &euro; */}
                     </h4>
                   </div>
                 </li>
@@ -257,15 +224,23 @@ class TaskDetail extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const id = ownProps.match.params.id;
+
   const tasks = state.firestore.data.Tasks;
-  const task = tasks ? tasks[id] : null;
   const users = state.firestore.ordered.users;
   const projets = state.firestore.ordered.Project;
+
+  let projetSel;
+  if (projets) {
+    projetSel = projets.filter(proj => proj.id === id);
+  } else {
+    projetSel = [];
+  }
+
   return {
-    task: task,
+    tasks: tasks ? tasks : [],
     auth: state.firebase.auth,
     user: users ? users : [],
-    projets: projets ? projets : [],
+    projet: projetSel[0],
   };
 };
 
@@ -285,4 +260,4 @@ export default compose(
     { collection: 'users', orderBy: ['lastName', 'desc'] },
     { collection: 'Project', orderBy: ['createdAt', 'desc'] },
   ])
-)(TaskDetail);
+)(ProjectDetail);
