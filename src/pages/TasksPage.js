@@ -51,7 +51,7 @@ class TachesPage extends Component {
               <h5 className="mb-1 font-weight-bold">Nom</h5>
             </div>
             <div className="col-sm-3 d-flex justify-content-center align-items-end">
-              <h5 className="font-weight-bold">THJ (Euro)</h5>
+              <h5 className="font-weight-bold">TJ (Euro)</h5>
             </div>
             <div className="col-sm-2 d-flex justify-content-center align-items-end">
               <h5 className="font-weight-bold">Temp passé</h5>

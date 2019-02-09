@@ -30,7 +30,7 @@ const TaskListe = props => {
         key={index}
       >
         <div className="row">
-          <div className="col-sm-7 align-items-end">
+          <div className="col-sm-7 align-items-start">
             <h5 className="mb-1 font-weight-bold text-truncate">{item.name}</h5>
             {props.role === 'admin' && (
               <small>

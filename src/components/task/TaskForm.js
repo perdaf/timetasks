@@ -7,7 +7,7 @@ const TaskForm = props => {
   if (props.isAdmin && props.crea) {
     adminAndCrea = true;
   }
-
+  console.log('FORM props.idProj >>>', props.idProj);
   return (
     <form onSubmit={props.handleOnSubmit}>
       {props.crea && (
@@ -22,8 +22,8 @@ const TaskForm = props => {
             name="projet"
             id="projet"
             onChange={props.handleOnChange}
-            // placeholder="Enter l'etat"
-            // defaultValue={props.valueDev}
+            // value={props.idProj ? props.idProj : ''}
+            defaultValue={props.idProj ? props.idProj : ''}
           >
             <option>---</option>
             {props.projects.map((item, index) => {

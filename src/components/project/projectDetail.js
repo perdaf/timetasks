@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Link, Redirect } from 'react-router-dom';
+import '../../scss/index.scss';
 
-// import classnames from 'classnames';
+import classnames from 'classnames';
 
 import moment from 'moment';
 import 'moment-duration-format';
@@ -18,10 +19,45 @@ import { compose } from 'redux';
 class ProjectDetail extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       id: this.props.match.params.id,
+      projet: '',
+      tasksArr: '',
     };
+  }
+
+  componentDidMount() {
+    this.setState(
+      {
+        ...this.state,
+        projet: this.props.projet,
+        tasksArr: this.props.tasksArr,
+      },
+      () => {
+        // console.log('Mount state >>>', this.state);
+      }
+    );
+  }
+
+  componentDidUpdate(oldProps) {
+    const newProps = this.props;
+    if (oldProps.projet !== newProps.projet) {
+      this.setState({
+        ...this.state,
+        projet: newProps.projet,
+      });
+    }
+    if (oldProps.tasksArr !== newProps.tasksArr) {
+      this.setState({
+        ...this.state,
+        tasksArr: newProps.tasksArr,
+      });
+    }
+  }
+
+  componentWillUnmount() {
+    console.log('unMount');
+    this.setState({});
   }
 
   toggleModalSuppTask = id => {
@@ -37,7 +73,9 @@ class ProjectDetail extends Component {
 
   render() {
     // redirect to signin in not connected
-    const { auth, user, projet } = this.props;
+    const { auth, user } = this.props;
+    const { projet, tasksArr } = this.state;
+
     if (!auth.uid) return <Redirect to="/signin" />;
 
     const userName = id => {
@@ -49,40 +87,107 @@ class ProjectDetail extends Component {
         return '--';
       }
     };
-    // const projetName = id => {
-    //   const projet = projets.filter(projet => projet.id === id);
-    //   if (projet.length > 0) {
-    //     return projet[0].name;
-    //   } else {
-    //     return '--';
-    //   }
-    // };
+
+    // for styling by etat
+    const colorByEtat = etat => {
+      switch (etat) {
+        case 'fait':
+          return 1;
+        case 'en cour':
+          return 2;
+        case 'controle qualite':
+          return 3;
+        default:
+          return null;
+      }
+    };
+
+    let taskInProjet = [];
+    let coutProj = 0;
+    let timeProj = 0;
 
     if (projet) {
       const {
+        id,
         name,
         desc,
-        // etat,
         budget,
         createdBy,
         deadLine,
         createdAt,
+        tasks,
       } = projet;
 
-      // for styling etat
-      //   const colorByEtat = etat => {
-      //     switch (etat) {
-      //       case 'fait':
-      //         return 1;
-      //       case 'en cour':
-      //         return 2;
-      //       case 'controle qualite':
-      //         return 3;
-      //       default:
-      //         return null;
-      //     }
-      //   };
+      // variable pour le % d'avencement du projet
+      const nbTasks = tasks ? tasks.length : '';
+      let nbTacheRea = 0;
 
+      if (tasks) {
+        tasks.forEach(element => {
+          // recherche des infos task(en selectionant la bonne tasks de la bdd)
+          // pour les tasks du projet
+          let task = null;
+          tasksArr.forEach(item => {
+            if (item.id === element.name) {
+              task = item;
+            }
+          });
+          // push des infos dans un array
+          if (task !== null) {
+            taskInProjet.push({
+              id: element.name,
+              name: task.name,
+              desc: task.desc,
+              etat: task.etat,
+            });
+            // add de chaque couts pour le cout total
+            if (task.cout) {
+              coutProj += task.cout;
+            }
+            // add des tps de chaque taches
+            timeProj += task.elapsTime;
+
+            // pour le calcule du % de tache realiser
+            switch (task.etat) {
+              case 'en cour':
+                nbTacheRea += 0;
+                return nbTacheRea;
+              case 'controle qualite':
+                nbTacheRea += 0.5;
+                return nbTacheRea;
+              case 'fait':
+                nbTacheRea += 1;
+                return nbTacheRea;
+              default:
+                nbTacheRea += 0;
+                return nbTacheRea;
+            }
+          } else {
+            return (
+              <div className="text-center">
+                <strong>Loading...</strong>
+                <br />
+                <div className="spinner-border" role="status">
+                  <span className="sr-only">Loading...</span>
+                </div>
+              </div>
+            );
+          }
+        });
+      } else {
+        return (
+          <div className="text-center">
+            <strong>Loading...</strong>
+            <br />
+            <div className="spinner-border" role="status">
+              <span className="sr-only">Loading...</span>
+            </div>
+          </div>
+        );
+      }
+
+      const perceOfProj = (nbTacheRea / nbTasks) * 100;
+      // console.log('pourcentage : >>>', perceOfProj);
       return (
         <div>
           <Modal
@@ -174,18 +279,80 @@ class ProjectDetail extends Component {
                   </ul>
                 </div>
                 <div className="col-sm-6 text-center">
-                  <h2>Temp total passer sur le projet</h2>
+                  <h2 className="mb-3">Liste des taches liées au projet :</h2>
+                  {taskInProjet.map((tsk, index) => {
+                    return (
+                      <Link
+                        to={`/task-detail/${tsk.id}`}
+                        key={index}
+                        className={classnames(
+                          'list-group-item list-group-item-action mb-1',
+                          {
+                            done: colorByEtat(tsk.etat) === 1,
+                            'en-cour': colorByEtat(tsk.etat) === 2,
+                            'controle-qualite': colorByEtat(tsk.etat) === 3,
+                          }
+                        )}
+                      >
+                        <div className="row">
+                          <div className="col-4 d-flex align-items-start text-truncate">
+                            <b>name :</b>&nbsp;{tsk.name}
+                          </div>
+                          <div className="col-4 d-flex align-items-start text-truncate">
+                            <b>desc :</b>&nbsp;{tsk.desc}
+                          </div>
+                          <div className="col-4 d-flex align-items-start text-truncate">
+                            <b>etat :</b>&nbsp;{tsk.etat}
+                          </div>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                  <div className="row">
+                    <div className="col">
+                      <Link
+                        to={`/add-task/${id}`}
+                        className="btn btn-primary mt-3"
+                      >
+                        Ajouter une tache
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <h2 className="mr-3">% d'avancement du projet :</h2>
+              <div className="progress" style={{ height: '30px' }}>
+                <div
+                  className="progress-bar"
+                  role="progressbar"
+                  style={{ width: `${perceOfProj}%` }}
+                  aria-valuenow={perceOfProj}
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                >
+                  <h5 style={{ paddingTop: '8px' }}>
+                    {Math.round(perceOfProj)}%
+                  </h5>
                 </div>
               </div>
               <ul className="list-group list-group-flush">
                 <li className="list-group-item bg-light">
-                  <div>
-                    <h4 className="font-weight-bold text-center py-3">
-                      Sommes investies :
-                      {/* {' '}
-                      {Math.round((thj / 7) * (elapsTime / 1000 / 60 / 60))}{' '}
-                      &euro; */}
-                    </h4>
+                  <div className="row">
+                    <div className="col-6">
+                      <h4>
+                        Temp total passer sur le projet :{' '}
+                        <b>
+                          {moment
+                            .duration(timeProj, 'milliseconds')
+                            .format('hh:mm:ss', { trim: false })}
+                        </b>
+                      </h4>
+                    </div>
+                    <div className="col-6">
+                      <h4>
+                        Cout du projet : <b>{coutProj} &euro;</b>
+                      </h4>
+                    </div>
                   </div>
                 </li>
               </ul>
@@ -223,24 +390,31 @@ class ProjectDetail extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const id = ownProps.match.params.id;
-
-  const tasks = state.firestore.data.Tasks;
-  const users = state.firestore.ordered.users;
-  const projets = state.firestore.ordered.Project;
-
+  let id;
+  let tasksListe;
+  let users;
+  let projets;
   let projetSel;
-  if (projets) {
-    projetSel = projets.filter(proj => proj.id === id);
-  } else {
-    projetSel = [];
+  try {
+    id = ownProps.match.params.id;
+    tasksListe = state.firestore.ordered.Tasks;
+    users = state.firestore.ordered.users;
+    projets = state.firestore.ordered.Project;
+
+    if (projets) {
+      projetSel = projets.filter(proj => proj.id === id);
+    } else {
+      projetSel = null;
+    }
+  } catch (err) {
+    console.error(err);
   }
 
   return {
-    tasks: tasks ? tasks : [],
+    tasksArr: tasksListe ? tasksListe : null,
     auth: state.firebase.auth,
-    user: users ? users : [],
-    projet: projetSel[0],
+    user: users ? users : null,
+    projet: projets ? projetSel[0] : null,
   };
 };
 

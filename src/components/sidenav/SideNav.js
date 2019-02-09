@@ -15,12 +15,12 @@ const SideNav = () => {
           </li>
           <li className="nav-item">
             <NavLink className="nav-link" to="/tasks-page">
-              Lsite des taches
+              Liste des taches
             </NavLink>
           </li>
           <li className="nav-item">
             <NavLink className="nav-link" to="/projects-page">
-              Lsite des projets
+              Liste des projets
             </NavLink>
           </li>
         </ul>

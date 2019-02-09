@@ -56,7 +56,7 @@ class UsersPage extends Component {
                 <h5 className="font-weight-bold">Role</h5>
               </div>
               <div className="col-lg-3 text-lg-center">
-                <h5 className="font-weight-bold">thj</h5>
+                <h5 className="font-weight-bold">Tarif Journalier</h5>
               </div>
             </div>
             <div className="list-group">

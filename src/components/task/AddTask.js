@@ -13,7 +13,9 @@ class AddTask extends Component {
     super(props);
 
     this.state = {
-      projet: '',
+      projet: this.props.match.params.idProj
+        ? this.props.match.params.idProj
+        : '',
       name: '',
       desc: '',
       deadLine: '',
@@ -89,7 +91,7 @@ class AddTask extends Component {
         // console.log('NewTask >>>', newtask);
         // add the new task to firestore
         this.props.onAddTask(newtask);
-        this.props.history.push(`/`);
+        this.props.history.push(`/projects-page`);
       });
     } else {
       let newtask = {
@@ -106,7 +108,7 @@ class AddTask extends Component {
       // console.log('NewTask >>>', newtask);
       // add the new task to firestore
       this.props.onAddTask(newtask);
-      this.props.history.push(`/`);
+      this.props.history.push(`/projects-page`);
     }
 
     // clear the state
@@ -152,6 +154,9 @@ class AddTask extends Component {
       isAdmin = true;
     }
 
+    // si id du projet passer en parametre ne pas afficher select projet dans form
+    const idProj = this.props.match.params.idProj;
+
     return (
       <div>
         <div className="card">
@@ -167,6 +172,7 @@ class AddTask extends Component {
             crea={true}
             isAdmin={isAdmin}
             projects={projectsArr}
+            idProj={idProj}
           />
         </div>
       </div>

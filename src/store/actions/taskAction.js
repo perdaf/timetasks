@@ -126,11 +126,24 @@ export const editElapsTimeTask = (elapsTime, id) => {
     firestore
       .collection('Tasks')
       .doc(id)
-      .update({
-        elapsTime,
-      })
-      .then(() => {
-        dispatch({ type: 'EDITELAPSTIME', elapsTime });
+      .get()
+      .then(tsk => {
+        // recup le thj de la tache
+        const tj = tsk.data().thj;
+        const cout = Math.round((tj / 7) * (elapsTime / 1000 / 60 / 60));
+        return firestore
+          .collection('Tasks')
+          .doc(id)
+          .update({
+            elapsTime,
+            cout,
+          })
+          .then(() => {
+            dispatch({ type: 'EDITELAPSTIME', elapsTime });
+          })
+          .catch(err => {
+            console.error(err);
+          });
       })
       .catch(err => {
         console.error(err);

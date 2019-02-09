@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link, Redirect } from 'react-router-dom';
-import './task.scss';
+import '../../scss/index.scss';
 
 import classnames from 'classnames';
 
@@ -120,7 +120,10 @@ class TaskDetail extends Component {
               <div className="row">
                 <div className="col-sm-6">
                   <ul className="list-group list-group-flush">
-                    <li className="list-group-item">
+                    <Link
+                      to={`/project-detail/${projet}`}
+                      className="list-group-item list-group-item-action"
+                    >
                       <div className="row">
                         <div className="col-sm-4">
                           <h5 className="font-weight-bold">projet:</h5>
@@ -129,7 +132,7 @@ class TaskDetail extends Component {
                           {projetName(projet)}
                         </div>
                       </div>
-                    </li>
+                    </Link>
                     <li className="list-group-item">
                       <div className="row">
                         <div className="col-sm-4">
@@ -190,7 +193,7 @@ class TaskDetail extends Component {
                     <li className="list-group-item">
                       <div className="row">
                         <div className="col-sm-4">
-                          <h5 className="font-weight-bold">THJ:</h5>
+                          <h5 className="font-weight-bold">TJ:</h5>
                         </div>
                         <div className="col-sm">{thj} &euro;</div>
                       </div>
