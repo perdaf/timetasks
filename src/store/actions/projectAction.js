@@ -52,19 +52,23 @@ export const deleteProject = id => {
       .get()
       .then(proj => {
         const tasks = proj.data().tasks;
-        tasks.map(res => {
-          let taskId = res.name;
-          return firestore
-            .collection('Tasks')
-            .doc(taskId)
-            .delete()
-            .then(() => {
-              dispatch({ type: 'DELETETASK', taskId });
-            })
-            .catch(err => {
-              console.error(err);
-            });
-        });
+        if (tasks.lenght > 0) {
+          tasks.map(res => {
+            let taskId = res.name;
+            return firestore
+              .collection('Tasks')
+              .doc(taskId)
+              .delete()
+              .then(() => {
+                dispatch({ type: 'DELETETASK', taskId });
+              })
+              .catch(err => {
+                console.error(err);
+              });
+          });
+        } else {
+          return;
+        }
       })
       .then(() => {
         return firestore

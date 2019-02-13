@@ -4,6 +4,8 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import './CardDeploy.scss';
+import StatPresentation from '../components/dashboard/StatPresentation';
+import Notifications from '../components/dashboard/notifications/Notifications';
 
 class Home extends Component {
   state = {};
@@ -29,10 +31,10 @@ class Home extends Component {
       <div>
         <div className="row">
           <div className="col-8">
-            <h4>Chart</h4>
+            <StatPresentation />
           </div>
           <div className="col-4">
-            <h4>Notification</h4>
+            <Notifications />
           </div>
         </div>
       </div>
