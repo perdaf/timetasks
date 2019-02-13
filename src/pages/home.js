@@ -27,7 +27,14 @@ class Home extends Component {
 
     return (
       <div>
-        <h1>HOME PAGE</h1>
+        <div className="row">
+          <div className="col-8">
+            <h4>Chart</h4>
+          </div>
+          <div className="col-4">
+            <h4>Notification</h4>
+          </div>
+        </div>
       </div>
     );
   }

@@ -80,7 +80,7 @@ class AddProject extends Component {
       cout: 0,
       errors: {},
     });
-    this.props.history.push(`/`);
+    this.props.history.push(`/projects-page`);
   };
 
   render() {

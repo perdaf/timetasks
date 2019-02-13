@@ -5,6 +5,12 @@ const projectReducer = (state = initialStates, action) => {
     case 'ADDPROJECT':
       console.log('Project added to db');
       return state;
+    case 'EDITPROJECT':
+      console.log('Project updated');
+      return state;
+    case 'DELETEPROJECT':
+      console.log('project deleted');
+      return state;
     default:
       return state;
   }

@@ -86,7 +86,12 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   connect(mapStateToProps),
   firestoreConnect([
-    { collection: 'Tasks', orderBy: ['createdAt', 'desc'] },
+    {
+      collection: 'Tasks',
+      orderBy: ['createdAt', 'desc'],
+      // limit: 3,
+      // startAfter: 2,
+    },
     { collection: 'users', orderBy: ['lastName', 'desc'] },
   ])
 )(TaskListe);

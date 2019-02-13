@@ -14,7 +14,11 @@ export const createTask = task => {
           .get()
           .then(doc => {
             // get all old tasks
-            let oldTask = doc.data().tasks || [];
+
+            let oldTask =
+              Object.getOwnPropertyNames(doc.data().tasks).length > 0
+                ? doc.data().tasks
+                : [];
             // add the new task in list
             oldTask.push({ name: res.id });
             // set the new tasks array in the nestin tasks

@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import '../../scss/index.scss';
-
-import classnames from 'classnames';
+import './project.scss';
 
 import moment from 'moment';
 import 'moment-duration-format';
+import classnames from 'classnames';
 
 import * as $ from 'jquery';
 
 import Modal from '../layout/modal/Modal';
 
 import { connect } from 'react-redux';
-import { deleteTask } from '../../store/actions/taskAction';
+import { deleteProject } from '../../store/actions/projectAction';
 import { firestoreConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
 
@@ -23,6 +23,7 @@ class ProjectDetail extends Component {
       id: this.props.match.params.id,
       projet: '',
       tasksArr: '',
+      taskInProj: '',
     };
   }
 
@@ -32,32 +33,29 @@ class ProjectDetail extends Component {
         ...this.state,
         projet: this.props.projet,
         tasksArr: this.props.tasksArr,
+        taskInProj: this.props.taskInProj,
       },
       () => {
-        // console.log('Mount state >>>', this.state);
+        // console.log('STATE MOUNT>>>', this.state);
       }
     );
   }
 
   componentDidUpdate(oldProps) {
     const newProps = this.props;
-    if (oldProps.projet !== newProps.projet) {
-      this.setState({
-        ...this.state,
-        projet: newProps.projet,
-      });
+    if (oldProps !== newProps) {
+      this.setState(
+        {
+          ...this.state,
+          projet: newProps.projet,
+          tasksArr: newProps.tasksArr,
+          taskInProj: newProps.taskInProj,
+        },
+        () => {
+          // console.log('STATE UPDATE >>>', this.state);
+        }
+      );
     }
-    if (oldProps.tasksArr !== newProps.tasksArr) {
-      this.setState({
-        ...this.state,
-        tasksArr: newProps.tasksArr,
-      });
-    }
-  }
-
-  componentWillUnmount() {
-    console.log('unMount');
-    this.setState({});
   }
 
   toggleModalSuppTask = id => {
@@ -65,28 +63,18 @@ class ProjectDetail extends Component {
     $('.ModalBtnConfirm')
       .off('click')
       .click(() => {
-        // this.props.onDeleteTask(id);
+        this.props.onDeleteProject(id);
         $('#ConfirmDelete').modal('hide');
-        // this.props.history.push(`/`);
+        this.props.history.push(`/projects-page`);
       });
   };
 
   render() {
     // redirect to signin in not connected
-    const { auth, user } = this.props;
+    const { auth, user, thisUser } = this.props;
     const { projet, tasksArr } = this.state;
 
     if (!auth.uid) return <Redirect to="/signin" />;
-
-    const userName = id => {
-      const usercreator = user.filter(user => user.id === id);
-      // console.log('USERCREATOR >>>', usercreator);
-      if (usercreator.length > 0) {
-        return usercreator[0].lastName + ' ' + usercreator[0].firstName;
-      } else {
-        return '--';
-      }
-    };
 
     // for styling by etat
     const colorByEtat = etat => {
@@ -101,6 +89,20 @@ class ProjectDetail extends Component {
           return null;
       }
     };
+
+    const userName = id => {
+      const usercreator = user.filter(user => user.id === id);
+      if (usercreator.length > 0) {
+        return usercreator[0].lastName + ' ' + usercreator[0].firstName;
+      } else {
+        return '--';
+      }
+    };
+
+    let isAdmin = false;
+    if (thisUser.role === 'admin') {
+      isAdmin = true;
+    }
 
     let taskInProjet = [];
     let coutProj = 0;
@@ -118,31 +120,45 @@ class ProjectDetail extends Component {
         tasks,
       } = projet;
 
+      // apres supression d'une tache le projet garde en Tasks un doublon
+      // ici on elimine les doublons pour un affichage correct
+      let tskInP;
+      if (tasks.length > 0) {
+        tskInP = Array.from(new Set(tasks.map(item => item.name)));
+      } else {
+        tskInP = [];
+      }
+
       // variable pour le % d'avencement du projet
-      const nbTasks = tasks ? tasks.length : '';
+      const nbTasks = tskInP ? tskInP.length : 0;
       let nbTacheRea = 0;
 
-      if (tasks) {
-        tasks.forEach(element => {
+      // detect si tskInP es vide si oui remplace par un tableau vide
+      const taskInProject = tskInP.length > 0 ? tskInP : [];
+
+      if (taskInProject !== null && tasksArr) {
+        taskInProject.forEach(element => {
           // recherche des infos task(en selectionant la bonne tasks de la bdd)
           // pour les tasks du projet
           let task = null;
           tasksArr.forEach(item => {
-            if (item.id === element.name) {
+            if (item.id === element) {
               task = item;
             }
           });
           // push des infos dans un array
           if (task !== null) {
             taskInProjet.push({
-              id: element.name,
+              id: task.id,
               name: task.name,
               desc: task.desc,
               etat: task.etat,
+              createdBy: task.createdBy,
+              dev: task.dev,
             });
             // add de chaque couts pour le cout total
-            if (task.cout) {
-              coutProj += task.cout;
+            if (task.coutEstime) {
+              coutProj += task.coutEstime;
             }
             // add des tps de chaque taches
             timeProj += task.elapsTime;
@@ -247,39 +263,20 @@ class ProjectDetail extends Component {
                         </div>
                       </div>
                     </li>
-
-                    {/* <li
-                      className={classnames('list-group-item', {
-                        done: colorByEtat(etat) === 1,
-                        'en-cour': colorByEtat(etat) === 2,
-                        'controle-qualite': colorByEtat(etat) === 3,
-                      })}
-                    >
-                      <div className="row">
-                        <div className="col-sm-4">
-                          <h5 className="font-weight-bold">Etat:</h5>
+                    {isAdmin && (
+                      <li className="list-group-item">
+                        <div className="row">
+                          <div className="col-sm-4">
+                            <h5 className="font-weight-bold">Budget:</h5>
+                          </div>
+                          <div className="col-sm">{budget} &euro;</div>
                         </div>
-                        <div
-                          className="col-sm font-weight-bold"
-                          style={{ fontSize: '1.2rem' }}
-                        >
-                          {etat ? etat : 'non renseigner'}
-                        </div>
-                      </div>
-                    </li> */}
-
-                    <li className="list-group-item">
-                      <div className="row">
-                        <div className="col-sm-4">
-                          <h5 className="font-weight-bold">Budget:</h5>
-                        </div>
-                        <div className="col-sm">{budget} &euro;</div>
-                      </div>
-                    </li>
+                      </li>
+                    )}
                   </ul>
                 </div>
                 <div className="col-sm-6 text-center">
-                  <h2 className="mb-3">Liste des taches liées au projet :</h2>
+                  <h4 className="mb-3">Liste des taches :</h4>
                   {taskInProjet.map((tsk, index) => {
                     return (
                       <Link
@@ -291,6 +288,7 @@ class ProjectDetail extends Component {
                             done: colorByEtat(tsk.etat) === 1,
                             'en-cour': colorByEtat(tsk.etat) === 2,
                             'controle-qualite': colorByEtat(tsk.etat) === 3,
+                            'disable-link': !isAdmin && auth.uid !== tsk.dev,
                           }
                         )}
                       >
@@ -320,57 +318,61 @@ class ProjectDetail extends Component {
                   </div>
                 </div>
               </div>
-              <h2 className="mr-3">% d'avancement du projet :</h2>
+              <h2 className="mr-3 text-center">% d'avancement du projet :</h2>
               <div className="progress" style={{ height: '30px' }}>
                 <div
                   className="progress-bar"
                   role="progressbar"
                   style={{ width: `${perceOfProj}%` }}
-                  aria-valuenow={perceOfProj}
+                  aria-valuenow={{ perceOfProj }}
                   aria-valuemin="0"
                   aria-valuemax="100"
                 >
                   <h5 style={{ paddingTop: '8px' }}>
-                    {Math.round(perceOfProj)}%
+                    {Math.round(perceOfProj) || 0} %
                   </h5>
                 </div>
               </div>
-              <ul className="list-group list-group-flush">
-                <li className="list-group-item bg-light">
-                  <div className="row">
-                    <div className="col-6">
-                      <h4>
-                        Temp total passer sur le projet :{' '}
-                        <b>
-                          {moment
-                            .duration(timeProj, 'milliseconds')
-                            .format('hh:mm:ss', { trim: false })}
-                        </b>
-                      </h4>
-                    </div>
-                    <div className="col-6">
-                      <h4>
-                        Cout du projet : <b>{coutProj} &euro;</b>
-                      </h4>
-                    </div>
-                  </div>
-                </li>
-              </ul>
+              {isAdmin && (
+                <div>
+                  <ul className="list-group list-group-flush">
+                    <li className="list-group-item bg-light">
+                      <div className="row">
+                        <div className="col-6 text-center">
+                          <h4>
+                            Temp total passer sur le projet :{' '}
+                            <b>
+                              {moment
+                                .duration(timeProj, 'milliseconds')
+                                .format('hh:mm:ss', { trim: false })}
+                            </b>
+                          </h4>
+                        </div>
+                        <div className="col-6 text-center">
+                          <h4>
+                            Cout du projet : <b>{coutProj} &euro;</b>
+                          </h4>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
 
-              <div className="d-flex justify-content-center mt-3">
-                <Link
-                  to={`/task-edit/${this.state.id}`}
-                  className="btn btn-primary mx-3"
-                >
-                  Edit
-                </Link>
-                <button
-                  className="btn btn-danger"
-                  onClick={() => this.toggleModalSuppTask(this.state.id)}
-                >
-                  Delete
-                </button>
-              </div>
+                  <div className="d-flex justify-content-center mt-3">
+                    <Link
+                      to={`/project-edit/${this.state.id}`}
+                      className="btn btn-primary mx-3"
+                    >
+                      Edit
+                    </Link>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => this.toggleModalSuppTask(this.state.id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -395,11 +397,14 @@ const mapStateToProps = (state, ownProps) => {
   let users;
   let projets;
   let projetSel;
+  let thisUser;
+
   try {
     id = ownProps.match.params.id;
     tasksListe = state.firestore.ordered.Tasks;
     users = state.firestore.ordered.users;
     projets = state.firestore.ordered.Project;
+    thisUser = state.firebase.profile;
 
     if (projets) {
       projetSel = projets.filter(proj => proj.id === id);
@@ -414,24 +419,25 @@ const mapStateToProps = (state, ownProps) => {
     tasksArr: tasksListe ? tasksListe : null,
     auth: state.firebase.auth,
     user: users ? users : null,
+    thisUser: thisUser ? thisUser : null,
     projet: projets ? projetSel[0] : null,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    onDeleteTask: id => dispatch(deleteTask(id)),
+    onDeleteProject: id => dispatch(deleteProject(id)),
   };
 };
 
 export default compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  ),
   firestoreConnect([
     { collection: 'Tasks', orderBy: ['createdAt', 'desc'] },
     { collection: 'users', orderBy: ['lastName', 'desc'] },
     { collection: 'Project', orderBy: ['createdAt', 'desc'] },
-  ])
+  ]),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
 )(ProjectDetail);

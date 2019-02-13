@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import TaskForm from './TaskForm';
-import moment from 'moment';
+import ProjectForm from './ProjectForm';
+
 import { Redirect } from 'react-router-dom';
 
 import { connect } from 'react-redux';
-import { editTask } from '../../store/actions/taskAction';
+import { editProject } from '../../store/actions/projectAction';
 import { firestoreConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
 
-class TaskEdit extends Component {
+class ProjectEdit extends Component {
   constructor(props) {
     super(props);
 
@@ -16,10 +16,7 @@ class TaskEdit extends Component {
       name: '',
       desc: '',
       deadLine: '',
-      etat: '',
-      dev: '',
-      thj: '',
-      projet: '',
+      budget: '',
       errors: {},
     };
   }
@@ -34,15 +31,15 @@ class TaskEdit extends Component {
   // Rappel: le this.props.task es obtenu en async avec firestoreConnect et mapStateToProps
   componentDidUpdate(oldProps) {
     const newProps = this.props;
-    if (oldProps.task !== newProps.task) {
+    if (oldProps.project !== newProps.project) {
       this.setState({
-        ...newProps.task,
+        ...newProps.project,
       });
     }
   }
   componentDidMount() {
     this.setState({
-      ...this.props.task,
+      ...this.props.project,
     });
   }
 
@@ -62,16 +59,8 @@ class TaskEdit extends Component {
   handleOnSubmit = e => {
     e.preventDefault();
 
-    const { name, desc, deadLine, etat, thj, dev, projet } = this.state;
-    const { projects } = this.props;
+    const { name, desc, deadLine, budget } = this.state;
     const id = this.props.match.params.id;
-    let dateFinProj;
-
-    if (projet !== '') {
-      const thisProj = projects.filter(proj => proj.id === projet);
-      dateFinProj = thisProj[0].deadLine;
-      console.log('datefinproj >>>', dateFinProj);
-    }
 
     if (name === '') {
       this.setState({ errors: { name: 'Le nom de la tache es requis' } });
@@ -89,76 +78,48 @@ class TaskEdit extends Component {
       });
       return;
     }
-
-    if (moment(deadLine).diff(moment(dateFinProj), 'days') > 0) {
+    if (budget === '') {
       this.setState({
-        errors: {
-          deadLine: `La date de fin es superieur a la deadline du projet ${moment(
-            dateFinProj
-          ).format('DD/MM/YYYY')}`,
-        },
+        errors: { budget: 'Le budget es requis' },
       });
       return;
     }
 
-    if (etat === '') {
-      this.setState({
-        etat: 'en cour',
-      });
-      return;
-    }
-    if (dev === '') {
-      this.setState({
-        errors: { dev: 'Le dev assigné es requise' },
-      });
-      return;
-    }
-
-    let newtask = {
+    let newProject = {
       name,
       desc,
       deadLine,
-      etat,
-      thj,
-      dev,
+      budget,
     };
 
     // add the new task to firestore
-    this.props.onEditTask(id, newtask);
+    this.props.onEditProject(id, newProject);
 
     // clear the state
     this.setState({
       name: '',
       desc: '',
       deadLine: '',
-      etat: '',
-      thj: '',
+      budget: '',
       errors: {},
     });
-    this.props.history.push(`/task-detail/${id}`);
+    this.props.history.push(`/project-detail/${id}`);
   };
 
   render() {
     // redirect to signin in not connected
-    const { auth, thisUser, users } = this.props;
+    const { auth, thisUser, project } = this.props;
 
     if (!auth.uid) return <Redirect to="/signin" />;
-    const dev = users.map(item => {
-      return {
-        name: item.lastName,
-        prenom: item.firstName,
-        id: item.id,
-        thj: item.thj,
-      };
-    });
+
     // console.log('THISUSER >>>', thisUser);
     let isAdmin = false;
     if (thisUser.role === 'admin') {
       isAdmin = true;
     }
 
-    if (this.props.task) {
-      const { name, desc, thj, deadLine, etat } = this.props.task;
+    if (project) {
+      const { name, desc, deadLine, budget } = project;
       return (
         <div>
           <div className="card">
@@ -166,20 +127,18 @@ class TaskEdit extends Component {
               className="card-header text-dark"
               style={{ fontSize: '1.5rem' }}
             >
-              Editer La tache
+              Editer Le projet: {name}
             </div>
             <div className="card-body" />
-            <TaskForm
+            <ProjectForm
               handleOnChange={this.handleOnChange}
               handleOnSubmit={this.handleOnSubmit}
               valueName={name}
               valueDesc={desc}
-              valueThj={thj}
               valueDeadLine={deadLine}
-              valueEtat={etat}
+              valueBuget={budget}
               errors={this.state.errors}
               isAdmin={isAdmin}
-              dev={dev}
             />
           </div>
         </div>
@@ -200,25 +159,20 @@ class TaskEdit extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const id = ownProps.match.params.id;
-  const tasks = state.firestore.data.Tasks;
-  const task = tasks ? tasks[id] : null;
-  const users = state.firestore.ordered.users;
-  const projects = state.firestore.ordered.Project;
+  const projects = state.firestore.data.Project;
+  const project = projects ? projects[id] : null;
   const thisUser = state.firebase.profile;
 
   return {
-    task: task,
+    project: project,
     auth: state.firebase.auth,
-    users: users ? users : null,
-    thisUser: thisUser ? thisUser : null,
-    projects: projects ? projects : null,
+    thisUser: thisUser ? thisUser : [],
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    // onAddTask: task => dispatch(createTask(task)),
-    onEditTask: (id, args) => dispatch(editTask(id, args)),
+    onEditProject: (id, args) => dispatch(editProject(id, args)),
   };
 };
 
@@ -228,8 +182,7 @@ export default compose(
     mapDispatchToProps
   ),
   firestoreConnect([
-    { collection: 'Tasks' },
+    { collection: 'Project' },
     { collection: 'users', orderBy: ['lastName', 'desc'] },
-    { collection: 'Project', orderBy: ['createdAt', 'desc'] },
   ])
-)(TaskEdit);
+)(ProjectEdit);

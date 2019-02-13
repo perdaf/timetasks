@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import TaskForm from './TaskForm';
 
+import moment from 'moment';
+
 import { Redirect } from 'react-router-dom';
 
 import { connect } from 'react-redux';
@@ -36,7 +38,8 @@ class AddTask extends Component {
   handleOnSubmit = e => {
     e.preventDefault();
     const { name, desc, deadLine, dev, projet } = this.state;
-    const { auth, thisUser, users } = this.props;
+    const { auth, thisUser, users, projects } = this.props;
+    let dateFinProj;
 
     if (projet === '') {
       this.setState({
@@ -44,6 +47,13 @@ class AddTask extends Component {
       });
       return;
     }
+
+    // on recup la deadline du projet
+    if (projet !== '') {
+      const thisProj = projects.filter(proj => proj.id === projet);
+      dateFinProj = thisProj[0].deadLine;
+    }
+
     if (name === '') {
       this.setState({ errors: { name: 'Le nom de la tache es requis' } });
       return;
@@ -68,6 +78,16 @@ class AddTask extends Component {
       });
       return;
     }
+    if (moment(deadLine).diff(moment(dateFinProj), 'days') > 0) {
+      this.setState({
+        errors: {
+          deadLine: `La date de fin es superieur a la deadline du projet ${moment(
+            dateFinProj
+          ).format('DD/MM/YYYY')}`,
+        },
+      });
+      return;
+    }
 
     const getUser = id => {
       return new Promise(resolve => {
@@ -84,6 +104,7 @@ class AddTask extends Component {
           deadLine,
           dev,
           thj: x ? x[0].thj : 0,
+          coutEstime: moment(deadLine).diff(moment(), 'days') * x[0].thj,
           elapsTime: 0,
           etat: 'en cour',
           createdBy: auth.uid,
@@ -91,7 +112,14 @@ class AddTask extends Component {
         // console.log('NewTask >>>', newtask);
         // add the new task to firestore
         this.props.onAddTask(newtask);
-        this.props.history.push(`/projects-page`);
+        // redirection selon idproject ou non
+        if (this.props.match.params.idProj) {
+          this.props.history.push(
+            `/project-detail/${this.props.match.params.idProj}`
+          );
+        } else {
+          this.props.history.push(`/projects-page`);
+        }
       });
     } else {
       let newtask = {
@@ -101,6 +129,7 @@ class AddTask extends Component {
         deadLine,
         dev: auth.uid,
         thj: thisUser.thj,
+        coutEstime: moment(deadLine).diff(moment(), 'days') * thisUser.thj,
         elapsTime: 0,
         etat: 'en cour',
         createdBy: auth.uid,
@@ -108,7 +137,14 @@ class AddTask extends Component {
       // console.log('NewTask >>>', newtask);
       // add the new task to firestore
       this.props.onAddTask(newtask);
-      this.props.history.push(`/projects-page`);
+      // redirection selon idproject ou non
+      if (this.props.match.params.idProj) {
+        this.props.history.push(
+          `/project-detail/${this.props.match.params.idProj}`
+        );
+      } else {
+        this.props.history.push(`/projects-page`);
+      }
     }
 
     // clear the state

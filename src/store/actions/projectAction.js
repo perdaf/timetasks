@@ -15,3 +15,71 @@ export const createProject = proj => {
       });
   };
 };
+
+export const editProject = (id, project) => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    // async call to db
+    const firestore = getFirestore();
+    const { name, desc, deadLine, budget } = project;
+    firestore
+      .collection('Project')
+      .doc(id)
+      .set(
+        {
+          name,
+          desc,
+          deadLine,
+          budget,
+        },
+        { merge: true }
+      )
+      .then(() => {
+        dispatch({ type: 'EDITPROJECT', id, project });
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  };
+};
+
+export const deleteProject = id => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    // async call to db
+    const firestore = getFirestore();
+    firestore
+      .collection('Project')
+      .doc(id)
+      .get()
+      .then(proj => {
+        const tasks = proj.data().tasks;
+        tasks.map(res => {
+          let taskId = res.name;
+          return firestore
+            .collection('Tasks')
+            .doc(taskId)
+            .delete()
+            .then(() => {
+              dispatch({ type: 'DELETETASK', taskId });
+            })
+            .catch(err => {
+              console.error(err);
+            });
+        });
+      })
+      .then(() => {
+        return firestore
+          .collection('Project')
+          .doc(id)
+          .delete()
+          .then(() => {
+            dispatch({ type: 'DELETEPROJECT', id });
+          })
+          .catch(err => {
+            console.error(err);
+          });
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  };
+};

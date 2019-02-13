@@ -20,14 +20,14 @@ const SignInLink = props => {
             aria-haspopup="true"
             aria-expanded="false"
           >
-            Project/task
+            Projets/Taches
           </button>
           <div className="dropdown-menu bg-dark">
             <NavLink to="/add-project" className="dropdown-item text-light">
-              <i className="fas fa-plus" /> Add Project
+              <i className="fas fa-plus" /> Ajouter un Projet
             </NavLink>
             <NavLink to="/add-task" className="dropdown-item text-light">
-              <i className="fas fa-plus" /> Add Task
+              <i className="fas fa-plus" /> Ajouter une Tache
             </NavLink>
           </div>
         </li>
@@ -42,11 +42,11 @@ const SignInLink = props => {
             aria-haspopup="true"
             aria-expanded="false"
           >
-            task
+            Tache
           </button>
           <div className="dropdown-menu bg-dark">
             <NavLink to="/add-task" className="dropdown-item text-light">
-              <i className="fas fa-plus" /> Add Task
+              <i className="fas fa-plus" /> Ajouter une Tache
             </NavLink>
           </div>
         </li>
@@ -55,15 +55,15 @@ const SignInLink = props => {
   };
   return (
     <React.Fragment>
-      <li className="nav-item">
+      {/* <li className="nav-item">
         <NavLink to="/" className="nav-link text-light">
           <i className="fas fa-home" /> Home
         </NavLink>
-      </li>
+      </li> */}
       {projectTaskByRole()}
       <li className="nav-item">
         <NavLink to="/about" className="nav-link text-light">
-          About
+          A propos
         </NavLink>
       </li>
 

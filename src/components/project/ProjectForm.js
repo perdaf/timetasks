@@ -1,6 +1,7 @@
 import React from 'react';
 import classnames from 'classnames';
 import { withRouter } from 'react-router-dom';
+import moment from 'moment';
 
 const ProjectForm = props => {
   return (
@@ -51,6 +52,7 @@ const ProjectForm = props => {
           })}
           name="deadLine"
           id="deadLine"
+          min={moment().format('YYYY-MM-DD')}
           onChange={props.handleOnChange}
           placeholder="Entrer la date de fin"
           defaultValue={props.valueDeadLine}

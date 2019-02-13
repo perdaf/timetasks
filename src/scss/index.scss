@@ -19,13 +19,14 @@ code {
 .content {
   display: flex;
   margin-top: 8vh;
-  height: 87vh;
+  min-height: 87vh;
 }
 
 .main {
   display: flex;
   width: 100%;
   margin-top: 20px;
+  margin-bottom: 2vh;
   justify-items: center;
 }
 
@@ -34,6 +35,7 @@ code {
   padding: 0;
 }
 
+// used by task detail
 .done {
   color: #fff;
   background-color: $green;

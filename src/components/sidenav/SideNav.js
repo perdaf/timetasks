@@ -9,18 +9,23 @@ const SideNav = () => {
       <div>
         <ul className="nav flex-column">
           <li className="nav-item">
+            <NavLink className="nav-link" to="/">
+              <i className="fas fa-chart-area" /> DashBoard
+            </NavLink>
+          </li>
+          <li className="nav-item">
             <NavLink className="nav-link" to="/users-page">
-              Liste des utilisateurs <span className="sr-only">(current)</span>
+              <i className="fas fa-users" /> Utilisateurs
             </NavLink>
           </li>
           <li className="nav-item">
             <NavLink className="nav-link" to="/tasks-page">
-              Liste des taches
+              <i className="fas fa-tasks" /> Taches
             </NavLink>
           </li>
           <li className="nav-item">
             <NavLink className="nav-link" to="/projects-page">
-              Liste des projets
+              <i className="fas fa-project-diagram" /> Projets
             </NavLink>
           </li>
         </ul>
