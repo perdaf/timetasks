@@ -85,7 +85,7 @@ class TaskDetail extends Component {
         switch (etat) {
           case 'fait':
             return 1;
-          case 'en cour':
+          case 'en cours':
             return 2;
           case 'controle qualite':
             return 3;

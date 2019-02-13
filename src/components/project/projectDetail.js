@@ -76,17 +76,31 @@ class ProjectDetail extends Component {
 
     if (!auth.uid) return <Redirect to="/signin" />;
 
-    // for styling by etat
+    // for styling tasks by etat
     const colorByEtat = etat => {
       switch (etat) {
         case 'fait':
           return 1;
-        case 'en cour':
+        case 'en cours':
           return 2;
         case 'controle qualite':
           return 3;
         default:
           return null;
+      }
+    };
+    //for styling progress bar by percent
+    const colorBarByPercent = percent => {
+      if (percent >= 0 && percent < 25) {
+        return 1;
+      } else if (percent >= 25 && percent < 50) {
+        return 2;
+      } else if (percent >= 50 && percent < 75) {
+        return 3;
+      } else if (percent >= 75 && percent <= 99) {
+        return 4;
+      } else if (percent === 100) {
+        return 5;
       }
     };
 
@@ -165,7 +179,7 @@ class ProjectDetail extends Component {
 
             // pour le calcule du % de tache realiser
             switch (task.etat) {
-              case 'en cour':
+              case 'en cours':
                 nbTacheRea += 0;
                 return nbTacheRea;
               case 'controle qualite':
@@ -321,7 +335,13 @@ class ProjectDetail extends Component {
               <h2 className="mr-3 text-center">% d'avancement du projet :</h2>
               <div className="progress" style={{ height: '30px' }}>
                 <div
-                  className="progress-bar"
+                  className={classnames('progress-bar', {
+                    red: colorBarByPercent(perceOfProj) === 1,
+                    reddish: colorBarByPercent(perceOfProj) === 2,
+                    orange: colorBarByPercent(perceOfProj) === 3,
+                    yellow: colorBarByPercent(perceOfProj) === 4,
+                    green: colorBarByPercent(perceOfProj) === 5,
+                  })}
                   role="progressbar"
                   style={{ width: `${perceOfProj}%` }}
                   aria-valuenow={{ perceOfProj }}
@@ -350,7 +370,7 @@ class ProjectDetail extends Component {
                         </div>
                         <div className="col-6 text-center">
                           <h4>
-                            Cout du projet : <b>{coutProj} &euro;</b>
+                            Couts estimé du projet : <b>{coutProj} &euro;</b>
                           </h4>
                         </div>
                       </div>

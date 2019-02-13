@@ -144,7 +144,7 @@ const TaskForm = props => {
             defaultValue={props.valueEtat}
           >
             <option>---</option>
-            <option value="en cour">En cour</option>
+            <option value="en cours">En cours</option>
             <option value="controle qualite">Controle qualité</option>
             <option value="fait">fait</option>
           </select>

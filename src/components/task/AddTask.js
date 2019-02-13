@@ -106,7 +106,7 @@ class AddTask extends Component {
           thj: x ? x[0].thj : 0,
           coutEstime: moment(deadLine).diff(moment(), 'days') * x[0].thj,
           elapsTime: 0,
-          etat: 'en cour',
+          etat: 'en cours',
           createdBy: auth.uid,
         };
         // console.log('NewTask >>>', newtask);
@@ -131,7 +131,7 @@ class AddTask extends Component {
         thj: thisUser.thj,
         coutEstime: moment(deadLine).diff(moment(), 'days') * thisUser.thj,
         elapsTime: 0,
-        etat: 'en cour',
+        etat: 'en cours',
         createdBy: auth.uid,
       };
       // console.log('NewTask >>>', newtask);
