@@ -18,11 +18,11 @@ const Header = props => {
           src={logo}
           alt={logo}
           className="logo"
-          style={{ height: '70px' }}
+          style={{ height: '60px' }}
         />
       </div>
       <div className="top-menu">
-        <ul className="navbar nav mr-auto">{link}</ul>
+        <ul className="navbar nav mr-auto mt-3">{link}</ul>
       </div>
     </nav>
   );
