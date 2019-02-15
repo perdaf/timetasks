@@ -36,7 +36,12 @@ function Notifications(props) {
             {notifsListe &&
               notifsListe.map((notif, index) => (
                 <li key={index} className="mb-2">
-                  <h5>{notif.content}</h5>
+                  <h5>
+                    <span role="img" aria-label="fire">
+                      🔥
+                    </span>{' '}
+                    {notif.content}
+                  </h5>
                   <span>{notif.projectName}</span>
                   <br />
                   <span>
