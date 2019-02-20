@@ -35,12 +35,13 @@ function Notifications(props) {
           <ul>
             {notifsListe &&
               notifsListe.map((notif, index) => (
-                <li key={index} className="mb-2">
+                <li
+                  key={index}
+                  className="mb-2"
+                  style={{ listStyleType: 'none' }}
+                >
                   <h5>
-                    <span role="img" aria-label="fire">
-                      🔥
-                    </span>{' '}
-                    {notif.content}
+                    <i className="fas fa-exclamation-circle" /> {notif.content}
                   </h5>
                   <span>{notif.projectName}</span>
                   <br />

@@ -13,6 +13,7 @@ class AddProject extends Component {
     this.state = {
       name: '',
       desc: '',
+      startAt: '',
       deadLine: '',
       budget: '',
       cout: 0,
@@ -29,7 +30,7 @@ class AddProject extends Component {
 
   handleOnSubmit = e => {
     e.preventDefault();
-    const { name, desc, deadLine, budget, cout } = this.state;
+    const { name, desc, startAt, deadLine, budget, cout } = this.state;
     const { auth } = this.props;
 
     if (name === '') {
@@ -39,6 +40,12 @@ class AddProject extends Component {
     if (desc === '') {
       this.setState({
         errors: { desc: 'La description du projet es requise' },
+      });
+      return;
+    }
+    if (startAt === '') {
+      this.setState({
+        errors: { startAt: 'La date de debut es requise' },
       });
       return;
     }
@@ -59,6 +66,7 @@ class AddProject extends Component {
       name,
       desc,
       createdAt: new Date(),
+      startAt,
       deadLine,
       budget,
       cout,
@@ -75,6 +83,7 @@ class AddProject extends Component {
     this.setState({
       name: '',
       desc: '',
+      startAt: '',
       deadLine: '',
       budget: '',
       cout: 0,

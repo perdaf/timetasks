@@ -27,7 +27,7 @@ class ProjectsPage extends Component {
     if (!auth.uid) return <Redirect to="/signin" />;
 
     return (
-      <div className="card card text-dark mt-2">
+      <div className="card card-listProj text-dark mt-2">
         <div className="card-header d-flex justify-content-between">
           <h4 className="font-weight-bold">Liste des projets</h4>
           <button
@@ -45,18 +45,10 @@ class ProjectsPage extends Component {
             cardNotDeploy: !this.state.listProjectsIsDeploy,
           })}
         >
-          <div className="row p-1">
-            <div className="col-lg-4">
-              <h5 className="mb-1 font-weight-bold">Nom</h5>
-            </div>
-            <div className="col-lg-4 text-lg-center">
-              <h5 className="mb-1 font-weight-bold">desc</h5>
-            </div>
-            <div className="col-lg-4 text-lg-center">
-              <h5 className="font-weight-bold">deadLine</h5>
-            </div>
+          <div className="ProjectList d-flex flex-wrap align-items-center justify-content-around">
+            {<ProjectListe role={user.role} />}
           </div>
-          <div className="list-group">{<ProjectListe role={user.role} />}</div>
+          {/* <div className="list-group">{<ProjectListe role={user.role} />}</div> */}
         </div>
       </div>
     );

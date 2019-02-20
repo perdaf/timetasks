@@ -129,6 +129,7 @@ class ProjectDetail extends Component {
         desc,
         budget,
         createdBy,
+        startAt,
         deadLine,
         createdAt,
         tasks,
@@ -232,7 +233,12 @@ class ProjectDetail extends Component {
               <h4 className="font-weight-bold" style={{ fontSize: '2rem' }}>
                 {name}
               </h4>
-              <small>Created by {userName(createdBy)}</small>
+              <small>
+                Created by {userName(createdBy)} le{' '}
+                {(createdAt &&
+                  moment(createdAt.toDate()).format('DD/MM/YYYY')) ||
+                  '--'}
+              </small>
             </div>
             <div className="card-body">
               <div className="row">
@@ -240,16 +246,16 @@ class ProjectDetail extends Component {
                   <ul className="list-group list-group-flush">
                     <li className="list-group-item">
                       <div className="row">
-                        <div className="col-sm-4">
+                        <div className="col-sm-5">
                           <h5 className="font-weight-bold">Desc:</h5>
                         </div>
                         <div className="col-sm">{desc}</div>
                       </div>
                     </li>
 
-                    <li className="list-group-item">
+                    {/* <li className="list-group-item">
                       <div className="row">
-                        <div className="col-sm-4">
+                        <div className="col-sm-5">
                           <h5 className="font-weight-bold">Créer le:</h5>
                         </div>
                         <div className="col-sm">
@@ -258,11 +264,23 @@ class ProjectDetail extends Component {
                             '--'}
                         </div>
                       </div>
+                    </li> */}
+
+                    <li className="list-group-item">
+                      <div className="row">
+                        <div className="col-sm-5">
+                          <h5 className="font-weight-bold">Date de debut :</h5>
+                        </div>
+                        <div className="col-sm">
+                          {(startAt && moment(startAt).format('DD/MM/YYYY')) ||
+                            '--'}
+                        </div>
+                      </div>
                     </li>
 
                     <li className="list-group-item">
                       <div className="row">
-                        <div className="col-sm-4">
+                        <div className="col-sm-5">
                           <h5 className="font-weight-bold">Date de fin :</h5>
                         </div>
                         <div className="col-sm">
@@ -280,7 +298,7 @@ class ProjectDetail extends Component {
                     {isAdmin && (
                       <li className="list-group-item">
                         <div className="row">
-                          <div className="col-sm-4">
+                          <div className="col-sm-5">
                             <h5 className="font-weight-bold">Budget:</h5>
                           </div>
                           <div className="col-sm">{budget} &euro;</div>

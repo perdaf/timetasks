@@ -20,7 +20,7 @@ export const editProject = (id, project) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     // async call to db
     const firestore = getFirestore();
-    const { name, desc, deadLine, budget } = project;
+    const { name, desc, startAt, deadLine, budget } = project;
     firestore
       .collection('Project')
       .doc(id)
@@ -28,6 +28,7 @@ export const editProject = (id, project) => {
         {
           name,
           desc,
+          startAt,
           deadLine,
           budget,
         },

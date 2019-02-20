@@ -15,6 +15,7 @@ class ProjectEdit extends Component {
     this.state = {
       name: '',
       desc: '',
+      startAt: '',
       deadLine: '',
       budget: '',
       errors: {},
@@ -59,7 +60,7 @@ class ProjectEdit extends Component {
   handleOnSubmit = e => {
     e.preventDefault();
 
-    const { name, desc, deadLine, budget } = this.state;
+    const { name, desc, startAt, deadLine, budget } = this.state;
     const id = this.props.match.params.id;
 
     if (name === '') {
@@ -69,6 +70,12 @@ class ProjectEdit extends Component {
     if (desc === '') {
       this.setState({
         errors: { desc: 'La description de la tache es requise' },
+      });
+      return;
+    }
+    if (startAt === '') {
+      this.setState({
+        errors: { startAt: 'La date de debut es requise' },
       });
       return;
     }
@@ -88,6 +95,7 @@ class ProjectEdit extends Component {
     let newProject = {
       name,
       desc,
+      startAt,
       deadLine,
       budget,
     };
@@ -99,6 +107,7 @@ class ProjectEdit extends Component {
     this.setState({
       name: '',
       desc: '',
+      startAt: '',
       deadLine: '',
       budget: '',
       errors: {},
@@ -119,7 +128,7 @@ class ProjectEdit extends Component {
     }
 
     if (project) {
-      const { name, desc, deadLine, budget } = project;
+      const { name, desc, startAt, deadLine, budget } = project;
       return (
         <div>
           <div className="card">
@@ -135,6 +144,7 @@ class ProjectEdit extends Component {
               handleOnSubmit={this.handleOnSubmit}
               valueName={name}
               valueDesc={desc}
+              valueStartAt={startAt}
               valueDeadLine={deadLine}
               valueBuget={budget}
               errors={this.state.errors}

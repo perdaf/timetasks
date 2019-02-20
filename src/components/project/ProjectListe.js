@@ -1,4 +1,5 @@
 import React from 'react';
+import './project.scss';
 
 import moment from 'moment';
 import 'moment-duration-format';
@@ -25,13 +26,12 @@ const ProjectListe = props => {
   if (project.length > 0) {
     // console.log('PROJECT', project);
     return project.map((item, index) => (
-      <Link
-        to={`/project-detail/${item.id}`}
-        className="list-group-item list-group-item-action mb-2"
-        key={index}
-      >
-        <div className="row">
-          <div className="col-sm-4">
+      <Link to={`/project-detail/${item.id}`} className="projItem" key={index}>
+        <div
+          className="card my-3 text-dark"
+          style={{ minHeight: '200px', width: '250px', margin: '0 15px 0' }}
+        >
+          <div className="card-header text-center">
             <h5 className="mb-1 font-weight-bold text-truncate">{item.name}</h5>
             {props.role === 'admin' && (
               <small>
@@ -39,11 +39,13 @@ const ProjectListe = props => {
               </small>
             )}
           </div>
-          <div className="col-sm-4 border-right border-left d-flex align-items-center justify-content-center">
-            <h6>{item.desc}</h6>
-          </div>
-          <div className="col-sm-4 d-flex align-items-center justify-content-center">
-            <h6>{moment(item.deadLine).format('DD-MM-YYYY')}</h6>
+          <div className="card-body text-center">
+            <div className=" text-truncate">
+              Description :<h6>{item.desc}</h6>
+            </div>
+            <div>
+              DeadLine :<h6>{moment(item.deadLine).format('DD-MM-YYYY')}</h6>
+            </div>
           </div>
         </div>
       </Link>
