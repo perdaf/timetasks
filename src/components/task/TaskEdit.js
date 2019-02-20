@@ -15,6 +15,7 @@ class TaskEdit extends Component {
     this.state = {
       name: '',
       desc: '',
+      startAt: '',
       deadLine: '',
       etat: '',
       dev: '',
@@ -62,15 +63,26 @@ class TaskEdit extends Component {
   handleOnSubmit = e => {
     e.preventDefault();
 
-    const { name, desc, deadLine, etat, thj, dev, projet } = this.state;
+    const {
+      name,
+      desc,
+      startAt,
+      deadLine,
+      etat,
+      thj,
+      dev,
+      projet,
+    } = this.state;
     const { projects } = this.props;
     const id = this.props.match.params.id;
     let dateFinProj;
+    let dateDebProj;
 
     if (projet !== '') {
       const thisProj = projects.filter(proj => proj.id === projet);
       dateFinProj = thisProj[0].deadLine;
-      console.log('datefinproj >>>', dateFinProj);
+      dateDebProj = thisProj[0].startAt;
+      // console.log('datefinproj >>>', dateFinProj);
     }
 
     if (name === '') {
@@ -80,6 +92,32 @@ class TaskEdit extends Component {
     if (desc === '') {
       this.setState({
         errors: { desc: 'La description de la tache es requise' },
+      });
+      return;
+    }
+    if (startAt === '') {
+      this.setState({
+        errors: { startAt: 'La date de debut es requise' },
+      });
+      return;
+    }
+    if (moment(startAt).diff(moment(dateFinProj), 'days') > 0) {
+      this.setState({
+        errors: {
+          startAt: `La date de debut es superieur à la deadline du projet ${moment(
+            dateFinProj
+          ).format('DD/MM/YYYY')}`,
+        },
+      });
+      return;
+    }
+    if (moment(startAt).diff(moment(dateDebProj), 'days') < 0) {
+      this.setState({
+        errors: {
+          startAt: `La date de debut es inferieur à la date de debut du projet ${moment(
+            dateDebProj
+          ).format('DD/MM/YYYY')}`,
+        },
       });
       return;
     }
@@ -93,7 +131,17 @@ class TaskEdit extends Component {
     if (moment(deadLine).diff(moment(dateFinProj), 'days') > 0) {
       this.setState({
         errors: {
-          deadLine: `La date de fin es superieur a la deadline du projet ${moment(
+          deadLine: `La deadLine es superieur à celle du projet ${moment(
+            dateFinProj
+          ).format('DD/MM/YYYY')}`,
+        },
+      });
+      return;
+    }
+    if (moment(deadLine).diff(moment(dateDebProj), 'days') < 0) {
+      this.setState({
+        errors: {
+          deadLine: `La deadLine es inferieur à la date de debut du projet ${moment(
             dateFinProj
           ).format('DD/MM/YYYY')}`,
         },
@@ -117,7 +165,9 @@ class TaskEdit extends Component {
     let newtask = {
       name,
       desc,
+      startAt,
       deadLine,
+      coutEstime: moment(deadLine).diff(moment(startAt), 'days') * thj,
       etat,
       thj,
       dev,
@@ -130,6 +180,7 @@ class TaskEdit extends Component {
     this.setState({
       name: '',
       desc: '',
+      startAt: '',
       deadLine: '',
       etat: '',
       thj: '',
@@ -158,7 +209,7 @@ class TaskEdit extends Component {
     }
 
     if (this.props.task) {
-      const { name, desc, thj, deadLine, etat } = this.props.task;
+      const { name, desc, startAt, thj, deadLine, etat } = this.props.task;
       return (
         <div>
           <div className="card">
@@ -175,6 +226,7 @@ class TaskEdit extends Component {
               valueName={name}
               valueDesc={desc}
               valueThj={thj}
+              valueDateDeb={startAt}
               valueDeadLine={deadLine}
               valueEtat={etat}
               errors={this.state.errors}

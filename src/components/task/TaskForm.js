@@ -109,25 +109,48 @@ const TaskForm = props => {
         </div>
       )}
 
-      <div className="form-group text-dark px-4">
-        <label htmlFor="deadLine">Date de fin</label>
-        <input
-          type="date"
-          autoComplete="date de fin"
-          className={classnames('form-control', {
-            'is-invalid': props.errors.deadLine,
-          })}
-          name="deadLine"
-          id="deadLine"
-          min={moment().format('YYYY-MM-DD')}
-          onChange={props.handleOnChange}
-          placeholder="Entrer la date de fin"
-          defaultValue={props.valueDeadLine}
-        />
-        {props.errors.deadLine && (
-          <div className="invalid-feedback">{props.errors.deadLine}</div>
-        )}
+      <div className="form-row mx-3">
+        <div className="form-group text-dark col-md-6">
+          <label htmlFor="startAt">Date de debut</label>
+          <input
+            type="date"
+            autoComplete="date de debut"
+            className={classnames('form-control', {
+              'is-invalid': props.errors.startAt,
+            })}
+            name="startAt"
+            id="startAt"
+            min={moment().format('YYYY-MM-DD')}
+            onChange={props.handleOnChange}
+            placeholder="Entrer la date de fin"
+            defaultValue={props.valueDateDeb}
+          />
+          {props.errors.startAt && (
+            <div className="invalid-feedback">{props.errors.startAt}</div>
+          )}
+        </div>
+
+        <div className="form-group text-dark col-md-6">
+          <label htmlFor="deadLine">Date de fin</label>
+          <input
+            type="date"
+            autoComplete="date de fin"
+            className={classnames('form-control', {
+              'is-invalid': props.errors.deadLine,
+            })}
+            name="deadLine"
+            id="deadLine"
+            min={moment().format('YYYY-MM-DD')}
+            onChange={props.handleOnChange}
+            placeholder="Entrer la date de fin"
+            defaultValue={props.valueDeadLine}
+          />
+          {props.errors.deadLine && (
+            <div className="invalid-feedback">{props.errors.deadLine}</div>
+          )}
+        </div>
       </div>
+
       {!props.crea && (
         <div className="form-group text-dark px-4">
           <label htmlFor="etat">Etat :</label>

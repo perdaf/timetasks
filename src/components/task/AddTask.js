@@ -20,6 +20,7 @@ class AddTask extends Component {
         : '',
       name: '',
       desc: '',
+      startAt: '',
       deadLine: '',
       dev: this.props.auth.uid,
       thj: '',
@@ -37,9 +38,10 @@ class AddTask extends Component {
 
   handleOnSubmit = e => {
     e.preventDefault();
-    const { name, desc, deadLine, dev, projet } = this.state;
+    const { name, desc, startAt, deadLine, dev, projet } = this.state;
     const { auth, thisUser, users, projects } = this.props;
     let dateFinProj;
+    let dateDebutProj;
 
     if (projet === '') {
       this.setState({
@@ -52,6 +54,7 @@ class AddTask extends Component {
     if (projet !== '') {
       const thisProj = projects.filter(proj => proj.id === projet);
       dateFinProj = thisProj[0].deadLine;
+      dateDebutProj = thisProj[0].startAt;
     }
 
     if (name === '') {
@@ -72,6 +75,33 @@ class AddTask extends Component {
       return;
     }
 
+    if (startAt === '') {
+      this.setState({
+        errors: { startAt: 'La date de debut es requise' },
+      });
+      return;
+    }
+    if (moment(startAt).diff(moment(dateFinProj), 'days') > 0) {
+      this.setState({
+        errors: {
+          startAt: `La date de debut es superieur a la deadline du projet ${moment(
+            dateFinProj
+          ).format('DD/MM/YYYY')}`,
+        },
+      });
+      return;
+    }
+    if (moment(startAt).diff(moment(dateDebutProj), 'days') < 0) {
+      this.setState({
+        errors: {
+          startAt: `La date de debut es inferieur à la date de debut du projet ${moment(
+            dateDebutProj
+          ).format('DD/MM/YYYY')}`,
+        },
+      });
+      return;
+    }
+
     if (deadLine === '') {
       this.setState({
         errors: { deadLine: 'La date de fin es requise' },
@@ -88,6 +118,16 @@ class AddTask extends Component {
       });
       return;
     }
+    if (moment(deadLine).diff(moment(startAt), 'days') < 0) {
+      this.setState({
+        errors: {
+          deadLine: `La date de fin es inferieur à la date de debut de la tache ${moment(
+            dateFinProj
+          ).format('DD/MM/YYYY')}`,
+        },
+      });
+      return;
+    }
 
     const getUser = id => {
       return new Promise(resolve => {
@@ -96,15 +136,20 @@ class AddTask extends Component {
     };
 
     if (dev !== auth.uid) {
+      console.log(
+        'tps de dev >>>',
+        moment(deadLine).diff(moment(startAt), 'days')
+      );
       getUser(dev).then(x => {
         let newtask = {
           projet,
           name,
           desc,
+          startAt,
           deadLine,
           dev,
           thj: x ? x[0].thj : 0,
-          coutEstime: moment(deadLine).diff(moment(), 'days') * x[0].thj,
+          coutEstime: moment(deadLine).diff(moment(startAt), 'days') * x[0].thj,
           elapsTime: 0,
           etat: 'en cours',
           createdBy: auth.uid,
@@ -126,10 +171,12 @@ class AddTask extends Component {
         projet,
         name,
         desc,
+        startAt,
         deadLine,
         dev: auth.uid,
         thj: thisUser.thj,
-        coutEstime: moment(deadLine).diff(moment(), 'days') * thisUser.thj,
+        coutEstime:
+          moment(deadLine).diff(moment(startAt), 'days') * thisUser.thj,
         elapsTime: 0,
         etat: 'en cours',
         createdBy: auth.uid,
@@ -152,6 +199,7 @@ class AddTask extends Component {
       projet: '',
       name: '',
       desc: '',
+      startAt: '',
       deadLine: '',
       dev: '',
       thj: '',
@@ -180,6 +228,7 @@ class AddTask extends Component {
       return {
         name: item.name,
         id: item.id,
+        startAt: item.startAt,
       };
     });
 

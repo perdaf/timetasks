@@ -100,7 +100,7 @@ export const editTask = (id, task) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     // async call to db
     const firestore = getFirestore();
-    const { name, desc, deadLine, etat, thj, dev } = task;
+    const { name, desc, startAt, deadLine, etat, thj, dev, coutEstime } = task;
     firestore
       .collection('Tasks')
       .doc(id)
@@ -108,7 +108,9 @@ export const editTask = (id, task) => {
         {
           name,
           desc,
+          startAt,
           deadLine,
+          coutEstime,
           etat,
           thj,
           dev,

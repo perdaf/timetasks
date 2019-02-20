@@ -76,6 +76,7 @@ class TaskDetail extends Component {
         dev,
         elapsTime,
         createdAt,
+        startAt,
         deadLine,
         createdBy,
       } = this.props.task;
@@ -123,7 +124,12 @@ class TaskDetail extends Component {
                 <h4 className="font-weight-bold" style={{ fontSize: '2rem' }}>
                   Tache : {name}
                 </h4>
-                <small>Created by {userName(createdBy)}</small>
+                <small>
+                  Created by {userName(createdBy)} le{' '}
+                  {(createdAt &&
+                    moment(createdAt.toDate()).format('DD/MM/YYYY')) ||
+                    '--'}
+                </small>
                 <div className="row mt-2">
                   <div className="col">
                     <h5 className="text-center">
@@ -146,7 +152,7 @@ class TaskDetail extends Component {
                         className="list-group-item list-group-item-action"
                       >
                         <div className="row">
-                          <div className="col-sm-4">
+                          <div className="col-sm-5">
                             <h5 className="font-weight-bold">projet:</h5>
                           </div>
                           <div
@@ -159,29 +165,32 @@ class TaskDetail extends Component {
                       </Link>
                       <li className="list-group-item">
                         <div className="row">
-                          <div className="col-sm-4">
+                          <div className="col-sm-5">
                             <h5 className="font-weight-bold">Desc:</h5>
                           </div>
                           <div className="col-sm">{desc}</div>
                         </div>
                       </li>
+
                       <li className="list-group-item">
                         <div className="row">
-                          <div className="col-sm-4">
-                            <h5 className="font-weight-bold">Créer le:</h5>
+                          <div className="col-sm-5">
+                            <h5 className="font-weight-bold">
+                              Date de debut :
+                            </h5>
                           </div>
                           <div className="col-sm">
-                            {(createdAt &&
-                              moment(createdAt.toDate()).format(
-                                'DD/MM/YYYY'
-                              )) ||
-                              '--'}
+                            <b>
+                              {(createdAt &&
+                                moment(startAt).format('DD/MM/YYYY')) ||
+                                '--'}{' '}
+                            </b>
                           </div>
                         </div>
                       </li>
                       <li className="list-group-item">
                         <div className="row">
-                          <div className="col-sm-4">
+                          <div className="col-sm-5">
                             <h5 className="font-weight-bold">Date de fin :</h5>
                           </div>
                           <div className="col-sm">
@@ -190,29 +199,29 @@ class TaskDetail extends Component {
                               {(deadLine &&
                                 moment
                                   .duration(moment(deadLine).diff(moment()))
-                                  .format('d [jour(s)]')) ||
-                                '--'}{' '}
+                                  .format('d [jour(s)]')) +
+                                ' (' +
+                                moment(deadLine).format('DD/MM/YYYY') +
+                                ') ' || '--'}{' '}
                             </b>
                           </div>
                         </div>
                       </li>
+
                       <li className="list-group-item">
                         <div className="row">
-                          <div className="col-sm-4">
+                          <div className="col-sm-5">
                             <h5 className="font-weight-bold">Temp de Dev :</h5>
                           </div>
                           <div className="col-sm">
-                            {moment(deadLine).diff(
-                              moment(createdAt.toDate()),
-                              'days'
-                            )}{' '}
+                            {moment(deadLine).diff(moment(startAt), 'days')}{' '}
                             jour(s)
                           </div>
                         </div>
                       </li>
                       <li className="list-group-item">
                         <div className="row">
-                          <div className="col-sm-4">
+                          <div className="col-sm-5">
                             <h5 className="font-weight-bold">
                               Cout journalié :
                             </h5>
@@ -222,7 +231,7 @@ class TaskDetail extends Component {
                       </li>
                       <li className="list-group-item">
                         <div className="row">
-                          <div className="col-sm-4">
+                          <div className="col-sm-5">
                             <h5 className="font-weight-bold">Cout estimé :</h5>
                           </div>
                           <div className="col-sm">

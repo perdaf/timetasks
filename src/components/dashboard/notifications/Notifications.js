@@ -41,7 +41,11 @@ function Notifications(props) {
                   style={{ listStyleType: 'none' }}
                 >
                   <h5>
-                    <i className="fas fa-exclamation-circle" /> {notif.content}
+                    <i
+                      className="fas fa-exclamation-circle"
+                      style={{ color: '#b33414' }}
+                    />{' '}
+                    {notif.content}
                   </h5>
                   <span>{notif.projectName}</span>
                   <br />
