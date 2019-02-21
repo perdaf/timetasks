@@ -1,4 +1,5 @@
 import React from 'react';
+import './task.scss';
 
 import moment from 'moment';
 import 'moment-duration-format';
@@ -26,22 +27,28 @@ const TaskListe = props => {
     return task.map((item, index) => (
       <Link
         to={`/task-detail/${item.id}`}
-        className="list-group-item list-group-item-action mb-2"
+        className="taskItem my-3 text-dark"
         key={index}
       >
-        <div className="row">
-          <div className="col-sm-7 align-items-start">
+        <div
+          className="card my-3 text-dark text-center"
+          style={{ minHeight: '200px', width: '250px', margin: '0 15px 0' }}
+        >
+          <div className="card-header text-center">
             <h5 className="mb-1 font-weight-bold text-truncate">{item.name}</h5>
             {props.role === 'admin' && (
               <small>
                 create by <b>{userName(item.createdBy)}</b>
+                <br />
+                le {moment(item.createdAt.toDate()).format('DD-MM-YYYY')}
               </small>
             )}
           </div>
-          <div className="col-sm-3 border-right border-left d-flex align-items-center justify-content-center">
-            <h6>{item.thj} &euro;</h6>
+          <div className="card-body text-center">
+            TJ :<h6>{item.thj} &euro;</h6>
           </div>
-          <div className="col-sm-2 d-flex align-items-center justify-content-center">
+          <div className="text-center">
+            Temp passé sur la tache :
             <h6>
               {moment
                 .duration(item.elapsTime, 'milliseconds')

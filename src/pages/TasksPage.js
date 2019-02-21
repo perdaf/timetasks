@@ -28,7 +28,7 @@ class TachesPage extends Component {
     if (!auth.uid) return <Redirect to="/signin" />;
 
     return (
-      <div className="card card text-dark mt-2">
+      <div className="card card-listTask text-dark mt-2">
         <div className="card-header d-flex justify-content-between">
           <h4 className="font-weight-bold">Liste des taches</h4>
           <button
@@ -46,18 +46,7 @@ class TachesPage extends Component {
             cardNotDeploy: !this.state.listeTachesIsDeploy,
           })}
         >
-          <div className="row">
-            <div className="col-sm-7 d-flex justify-content-start align-items-end">
-              <h5 className="mb-1 font-weight-bold">Nom</h5>
-            </div>
-            <div className="col-sm-3 d-flex justify-content-center align-items-end">
-              <h5 className="font-weight-bold">TJ (Euro)</h5>
-            </div>
-            <div className="col-sm-2 d-flex justify-content-center align-items-end">
-              <h5 className="font-weight-bold">Temp passé</h5>
-            </div>
-          </div>
-          <div className="list-group">
+          <div className="TaskList d-flex flex-wrap align-items-center justify-content-around">
             <TaskListe creator={creator} role={user.role} />
           </div>
         </div>

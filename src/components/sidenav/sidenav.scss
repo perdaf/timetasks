@@ -12,6 +12,13 @@
   padding-top: 25px; /* Place content 60px from the top */
   transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
 
+  .blocLinks {
+    margin: 0;
+    padding: 0;
+    left: 4px;
+    position: fixed;
+  }
+
   .nav-link {
     font-size: 1.2rem;
     color: #fff;

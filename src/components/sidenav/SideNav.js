@@ -6,7 +6,7 @@ import { NavLink } from 'react-router-dom';
 const SideNav = () => {
   return (
     <nav className="sidenav">
-      <div>
+      <div className="blocLinks">
         <ul className="nav flex-column">
           <li className="nav-item">
             <NavLink className="nav-link" to="/">
